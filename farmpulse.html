@@ -1,0 +1,1692 @@
+no build tools, no npm, runs directly in any browser:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmPulse — Farm to Table Marketplace</title>
+  <meta name="description" content="FarmPulse - Connecting farmers and buyers directly in West Godavari, Andhra Pradesh." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #f9fafb;
+      color: #111827;
+    }
+    :root {
+      --green-50: #f0fdf4; --green-100: #dcfce7; --green-200: #bbf7d0;
+      --green-300: #86efac; --green-400: #4ade80; --green-500: #22c55e;
+      --green-600: #16a34a; --green-700: #15803d; --green-800: #166534;
+      --green-900: #14532d;
+      --emerald-600: #059669; --emerald-700: #047857; --emerald-800: #065f46;
+      --red-50: #fef2f2; --red-200: #fecaca; --red-500: #ef4444;
+      --red-600: #dc2626; --red-700: #b91c1c;
+      --blue-50: #eff6ff; --blue-600: #2563eb;
+      --amber-400: #fbbf24; --amber-900: #78350f;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+      --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563;
+      --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
+    }
+
+    /* ── Utilities ── */
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .grid { display: grid; }
+    .block { display: block; }
+    .inline-flex { display: inline-flex; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1; }
+    .gap-1 { gap: 4px; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; } .gap-5 { gap: 20px; } .gap-6 { gap: 24px; }
+    .w-full { width: 100%; }
+    .min-h-screen { min-height: 100vh; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .fixed { position: fixed; }
+    .inset-0 { inset: 0; }
+    .z-50 { z-index: 50; }
+    .z-10 { z-index: 10; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-y-auto { overflow-y: auto; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .cursor-pointer { cursor: pointer; }
+    .resize-none { resize: none; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .capitalize { text-transform: capitalize; }
+    .leading-tight { line-height: 1.25; }
+    .leading-none { line-height: 1; }
+    .leading-relaxed { line-height: 1.625; }
+    .transition { transition: all 0.15s ease; }
+    .pointer-events-none { pointer-events: none; }
+    .select-none { user-select: none; }
+    .appearance-none { appearance: none; -webkit-appearance: none; }
+    .backdrop-blur { backdrop-filter: blur(8px); }
+
+    /* ── Typography ── */
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .font-normal { font-weight: 400; }
+
+    /* ── Spacing ── */
+    .p-2 { padding: 8px; } .p-3 { padding: 12px; } .p-4 { padding: 16px; }
+    .p-5 { padding: 20px; } .p-6 { padding: 24px; } .p-8 { padding: 32px; }
+    .px-2 { padding-left: 8px; padding-right: 8px; }
+    .px-3 { padding-left: 12px; padding-right: 12px; }
+    .px-4 { padding-left: 16px; padding-right: 16px; }
+    .px-5 { padding-left: 20px; padding-right: 20px; }
+    .px-6 { padding-left: 24px; padding-right: 24px; }
+    .px-8 { padding-left: 32px; padding-right: 32px; }
+    .py-1 { padding-top: 4px; padding-bottom: 4px; }
+    .py-2 { padding-top: 8px; padding-bottom: 8px; }
+    .py-2\.5 { padding-top: 10px; padding-bottom: 10px; }
+    .py-3 { padding-top: 12px; padding-bottom: 12px; }
+    .py-4 { padding-top: 16px; padding-bottom: 16px; }
+    .py-6 { padding-top: 24px; padding-bottom: 24px; }
+    .py-8 { padding-top: 32px; padding-bottom: 32px; }
+    .py-10 { padding-top: 40px; padding-bottom: 40px; }
+    .py-12 { padding-top: 48px; padding-bottom: 48px; }
+    .py-16 { padding-top: 64px; padding-bottom: 64px; }
+    .py-20 { padding-top: 80px; padding-bottom: 80px; }
+    .pt-16 { padding-top: 64px; }
+    .pt-20 { padding-top: 80px; }
+    .pb-10 { padding-bottom: 40px; }
+    .pl-10 { padding-left: 40px; }
+    .pl-12 { padding-left: 48px; }
+    .pr-12 { padding-right: 48px; }
+    .mt-1 { margin-top: 4px; } .mt-2 { margin-top: 8px; }
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    .mb-1 { margin-bottom: 4px; } .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 12px; } .mb-4 { margin-bottom: 16px; }
+    .mb-5 { margin-bottom: 20px; } .mb-6 { margin-bottom: 24px; }
+    .mb-8 { margin-bottom: 32px; } .mb-14 { margin-bottom: 56px; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .ml-auto { margin-left: auto; }
+
+    /* ── Colors ── */
+    .bg-white { background: #fff; }
+    .bg-gray-50 { background: var(--gray-50); }
+    .bg-gray-100 { background: var(--gray-100); }
+    .bg-gray-200 { background: var(--gray-200); }
+    .bg-green-50 { background: var(--green-50); }
+    .bg-green-100 { background: var(--green-100); }
+    .bg-green-600 { background: var(--green-600); }
+    .bg-green-700 { background: var(--green-700); }
+    .bg-red-50 { background: var(--red-50); }
+    .bg-red-500 { background: var(--red-500); }
+    .bg-amber-400 { background: var(--amber-400); }
+    .bg-blue-50 { background: var(--blue-50); }
+    .text-white { color: #fff; }
+    .text-gray-400 { color: var(--gray-400); }
+    .text-gray-500 { color: var(--gray-500); }
+    .text-gray-600 { color: var(--gray-600); }
+    .text-gray-700 { color: var(--gray-700); }
+    .text-gray-800 { color: var(--gray-800); }
+    .text-gray-900 { color: var(--gray-900); }
+    .text-green-200 { color: #bbf7d0; }
+    .text-green-300 { color: #86efac; }
+    .text-green-600 { color: var(--green-600); }
+    .text-green-700 { color: var(--green-700); }
+    .text-green-800 { color: var(--green-800); }
+    .text-red-500 { color: var(--red-500); }
+    .text-red-600 { color: var(--red-600); }
+    .text-red-700 { color: var(--red-700); }
+    .text-amber-600 { color: #d97706; }
+    .text-amber-900 { color: var(--amber-900); }
+    .text-blue-600 { color: var(--blue-600); }
+
+    /* ── Borders ── */
+    .border { border: 1px solid var(--gray-200); }
+    .border-t { border-top: 1px solid var(--gray-200); }
+    .border-b { border-bottom: 1px solid var(--gray-200); }
+    .border-2 { border-width: 2px; }
+    .border-green-100 { border-color: var(--green-100); }
+    .border-green-200 { border-color: var(--green-200); }
+    .border-green-300 { border-color: var(--green-300); }
+    .border-green-500 { border-color: var(--green-500); }
+    .border-red-200 { border-color: #fecaca; }
+    .border-gray-100 { border-color: var(--gray-100); }
+    .border-gray-200 { border-color: var(--gray-200); }
+    .border-amber-300 { border-color: #fcd34d; }
+
+    /* ── Rounded ── */
+    .rounded { border-radius: 4px; }
+    .rounded-lg { border-radius: 8px; }
+    .rounded-xl { border-radius: 12px; }
+    .rounded-2xl { border-radius: 16px; }
+    .rounded-3xl { border-radius: 24px; }
+    .rounded-full { border-radius: 9999px; }
+
+    /* ── Shadow ── */
+    .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+    .shadow { box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06); }
+    .shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06); }
+    .shadow-lg { box-shadow: 0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05); }
+    .shadow-xl { box-shadow: 0 20px 25px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.04); }
+    .shadow-2xl { box-shadow: 0 25px 50px rgba(0,0,0,.25); }
+
+    /* ── Spinner ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.7s linear infinite; }
+    .spinner {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 3px solid var(--green-200); border-top-color: var(--green-600);
+      animation: spin 0.7s linear infinite;
+    }
+    .spinner-sm { width: 16px; height: 16px; border-width: 2px; }
+    .spinner-lg { width: 48px; height: 48px; border-width: 3px; }
+
+    /* ── Fade/Slide animations ── */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    .slide-down { animation: slideDown 0.2s ease both; }
+    .scale-in { animation: scaleIn 0.25s ease both; }
+
+    /* ── Navbar ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--green-100);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--green-500), var(--emerald-700));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(22,163,74,.3);
+    }
+    .nav-logo span { font-size: 1.2rem; font-weight: 800; color: var(--green-800); }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-link {
+      padding: 8px 14px; border-radius: 8px; font-size: 0.875rem;
+      font-weight: 500; color: var(--gray-600); text-decoration: none;
+      transition: all 0.15s; cursor: pointer; border: none; background: none;
+    }
+    .nav-link:hover { background: var(--green-50); color: var(--green-700); }
+    .nav-link.active { background: var(--green-100); color: var(--green-800); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .btn-primary {
+      padding: 9px 18px; background: var(--green-600); color: #fff;
+      border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-primary:hover { background: var(--green-700); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-outline {
+      padding: 9px 18px; border: 1px solid var(--green-300); color: var(--green-700);
+      background: none; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-outline:hover { background: var(--green-50); }
+    .btn-danger {
+      padding: 9px 18px; background: var(--red-500); color: #fff;
+      border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-danger:hover { background: var(--red-600); }
+    .btn-ghost {
+      padding: 8px 14px; background: none; border: none; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 500; color: var(--gray-600);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--green-50); border-radius: 10px; padding: 6px 12px;
+    }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-400), var(--emerald-600));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    }
+    .lang-btn {
+      padding: 7px 12px; border-radius: 8px; border: 1px solid var(--gray-200);
+      background: #fff; font-size: 0.8rem; cursor: pointer; transition: all 0.15s;
+    }
+    .lang-btn:hover { border-color: var(--green-300); background: var(--green-50); }
+    .lang-btn.active { background: var(--green-600); color: #fff; border-color: var(--green-600); }
+    .mobile-menu-btn {
+      display: none; padding: 8px; border: none; background: none;
+      border-radius: 8px; cursor: pointer; transition: all 0.15s;
+    }
+    .mobile-menu-btn:hover { background: var(--green-50); }
+    #mobile-menu {
+      display: none; border-top: 1px solid var(--green-100);
+      background: #fff; padding: 12px 16px 16px;
+    }
+    #mobile-menu.open { display: block; animation: slideDown 0.2s ease; }
+
+    /* ── Pages ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: calc(100vh - 64px);
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 100%);
+      display: flex; align-items: center; padding: 80px 24px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url('/images/hero-field.jpg') center/cover no-repeat;
+      opacity: 0.25;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 680px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; padding: 8px 16px; border-radius: 9999px;
+      font-size: 0.875rem; margin-bottom: 24px; backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900;
+      color: #fff; line-height: 1.1; margin-bottom: 20px;
+    }
+    .hero h1 span { color: #86efac; }
+    .hero p { font-size: 1.125rem; color: #bbf7d0; margin-bottom: 32px; line-height: 1.7; }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
+    .hero-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-500); color: #fff; font-weight: 700;
+      padding: 14px 28px; border-radius: 16px; font-size: 1rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.2s; box-shadow: 0 8px 24px rgba(34,197,94,.3);
+    }
+    .hero-btn-primary:hover { background: var(--green-400); transform: translateY(-1px); }
+    .hero-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.35);
+      color: #fff; font-weight: 600; padding: 14px 28px; border-radius: 16px;
+      font-size: 1rem; text-decoration: none; cursor: pointer;
+      transition: all 0.2s; backdrop-filter: blur(8px);
+    }
+    .hero-btn-secondary:hover { background: rgba(255,255,255,.25); }
+    .hero-stats { display: flex; flex-wrap: wrap; gap: 16px; }
+    .hero-stat {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px; padding: 12px 18px; backdrop-filter: blur(8px);
+    }
+    .hero-stat .val { font-size: 1.5rem; font-weight: 900; color: #fff; }
+    .hero-stat .lbl { font-size: 0.75rem; color: #bbf7d0; }
+
+    /* ── Section ── */
+    .section { padding: 80px 24px; }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
+    .section-title { font-size: 2rem; font-weight: 900; color: var(--gray-900); margin-bottom: 8px; }
+    .section-sub { font-size: 1.1rem; color: var(--gray-500); margin-bottom: 48px; }
+
+    /* ── Feature Grid ── */
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: #fff; border-radius: 16px; padding: 24px;
+      border: 1px solid var(--gray-100); box-shadow: 0 1px 3px rgba(0,0,0,.05);
+      transition: box-shadow 0.2s;
+    }
+    .feature-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 1.4rem;
+    }
+
+    /* ── Role Cards ── */
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .role-card {
+      border-radius: 24px; padding: 32px; color: #fff;
+      position: relative; overflow: hidden;
+    }
+    .role-card.farmer { background: linear-gradient(135deg, var(--green-600), var(--emerald-800)); }
+    .role-card.buyer { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+    .role-card ul { list-style: none; margin: 16px 0 24px; }
+    .role-card ul li {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.875rem; margin-bottom: 8px; opacity: 0.9;
+    }
+    .role-card-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; font-weight: 700; padding: 12px 20px;
+      border-radius: 12px; font-size: 0.875rem; text-decoration: none;
+      border: none; cursor: pointer; transition: all 0.15s;
+    }
+    .role-card.farmer .role-card-btn { color: var(--green-700); }
+    .role-card.farmer .role-card-btn:hover { background: var(--green-50); }
+    .role-card.buyer .role-card-btn { color: #2563eb; }
+    .role-card.buyer .role-card-btn:hover { background: #eff6ff; }
+
+    /* ── Steps ── */
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .step-card { text-align: center; }
+    .step-icon {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--green-500), var(--emerald-700));
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; box-shadow: 0 8px 20px rgba(22,163,74,.2);
+      font-size: 1.6rem;
+    }
+    .step-num { font-size: 0.75rem; font-weight: 700; color: var(--green-500); margin-bottom: 4px; }
+
+    /* ── Villages ── */
+    .villages-section {
+      background: linear-gradient(135deg, var(--green-900), var(--emerald-800));
+      padding: 64px 24px;
+    }
+    .village-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 32px; }
+    .village-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      color: #fff; padding: 8px 16px; border-radius: 9999px;
+      font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      transition: all 0.15s; text-decoration: none;
+    }
+    .village-tag:hover { background: rgba(255,255,255,.22); }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--green-900); color: #bbf7d0; padding: 32px 24px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 8px; }
+    .footer-logo strong { color: #fff; font-size: 1.1rem; }
+
+    /* ── Auth ── */
+    .auth-page {
+      min-height: 100vh; padding-top: 64px;
+      background: linear-gradient(135deg, var(--green-50) 0%, #ecfdf5 50%, #f0fdfa 100%);
+      display: flex; align-items: center; justify-content: center; padding: 80px 16px;
+    }
+    .auth-card { background: #fff; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,.12); width: 100%; max-width: 440px; overflow: hidden; }
+    .auth-header {
+      background: linear-gradient(135deg, var(--green-600), var(--emerald-800));
+      padding: 32px; color: #fff;
+    }
+    .auth-header h1 { font-size: 1.75rem; font-weight: 900; margin-top: 16px; }
+    .auth-header p { color: #bbf7d0; font-size: 0.875rem; margin-top: 4px; }
+    .auth-body { padding: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+    .form-input {
+      width: 100%; padding: 12px 16px; border: 1px solid var(--gray-200);
+      border-radius: 12px; font-size: 0.875rem; font-family: inherit;
+      transition: all 0.15s; outline: none; background: #fff;
+    }
+    .form-input:hover { border-color: var(--green-300); }
+    .form-input:focus { border-color: var(--green-500); box-shadow: 0 0 0 3px rgba(34,197,94,.15); }
+    .form-input.error { border-color: #fca5a5; background: var(--red-50); }
+    .form-input-icon { position: relative; }
+    .form-input-icon .form-input { padding-left: 40px; }
+    .form-input-icon .icon-left {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-400); pointer-events: none;
+    }
+    .form-input-icon .icon-right {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-400); cursor: pointer; background: none; border: none; padding: 0;
+    }
+    .form-error { font-size: 0.75rem; color: var(--red-600); margin-top: 4px; }
+    .api-error {
+      background: var(--red-50); border: 1px solid #fecaca;
+      color: var(--red-700); padding: 12px 16px; border-radius: 12px;
+      font-size: 0.875rem; margin-bottom: 16px;
+    }
+    .api-success {
+      background: var(--green-50); border: 1px solid var(--green-200);
+      color: var(--green-700); padding: 12px 16px; border-radius: 12px;
+      font-size: 0.875rem; margin-bottom: 16px;
+    }
+    .role-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .role-option {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 16px 12px; border: 2px solid var(--gray-200); border-radius: 12px;
+      cursor: pointer; transition: all 0.15s; background: #fff;
+      font-size: 0.875rem; font-weight: 600; color: var(--gray-600);
+    }
+    .role-option:hover { border-color: var(--green-300); }
+    .role-option.selected { border-color: var(--green-500); background: var(--green-50); color: var(--green-700); }
+    .role-option .emoji { font-size: 1.75rem; }
+    .auth-toggle { text-align: center; font-size: 0.875rem; color: var(--gray-600); margin-top: 20px; }
+    .auth-toggle a { color: var(--green-600); font-weight: 700; cursor: pointer; text-decoration: none; }
+    .auth-toggle a:hover { color: var(--green-700); }
+
+    /* ── Dashboard ── */
+    .dashboard-page { padding-top: 64px; min-height: 100vh; background: var(--gray-50); }
+    .page-inner { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+    .page-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+    .page-title { font-size: 1.875rem; font-weight: 900; color: var(--gray-900); }
+    .page-sub { color: var(--gray-500); margin-top: 4px; font-size: 0.9rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: #fff; border-radius: 16px; padding: 20px;
+      border: 1px solid var(--gray-100); box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 1.2rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 900; color: var(--gray-900); }
+    .stat-label { font-size: 0.8rem; color: var(--gray-500); margin-top: 2px; }
+    .crops-panel { background: #fff; border-radius: 16px; border: 1px solid var(--gray-100); box-shadow: 0 1px 3px rgba(0,0,0,.05); overflow: hidden; }
+    .crops-panel-header { padding: 16px 24px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+    .crops-panel-body { padding: 24px; }
+    .crop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; gap: 16px; }
+    .empty-icon { font-size: 3rem; background: var(--green-50); width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; }
+    .empty-title { font-size: 1.25rem; font-weight: 700; color: var(--gray-800); }
+    .empty-sub { color: var(--gray-500); text-align: center; max-width: 320px; font-size: 0.9rem; }
+
+    /* ── Crop Card ── */
+    .crop-card {
+      background: #fff; border-radius: 16px; border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 3px rgba(0,0,0,.05); overflow: hidden;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      animation: fadeIn 0.3s ease both;
+    }
+    .crop-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); border-color: var(--green-200); }
+    .crop-card.best-deal { border-color: #fcd34d; box-shadow: 0 0 0 2px #fde68a; }
+    .crop-card-bar { height: 4px; background: linear-gradient(90deg, var(--green-400), var(--emerald-600)); }
+    .crop-card-bar.gold { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    .crop-card-body { padding: 16px; }
+    .crop-card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .crop-emoji { width: 48px; height: 48px; background: var(--green-50); border: 1px solid var(--green-100); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+    .crop-name { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); }
+    .crop-cat-badge { display: inline-block; font-size: 0.7rem; color: var(--green-700); background: var(--green-50); border: 1px solid var(--green-100); padding: 2px 8px; border-radius: 9999px; margin-top: 4px; }
+    .crop-price { font-size: 1.75rem; font-weight: 900; color: var(--green-700); }
+    .crop-price span { font-size: 0.875rem; font-weight: 400; color: var(--gray-500); }
+    .crop-details { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--gray-600); margin-bottom: 12px; }
+    .crop-detail-row { display: flex; align-items: center; gap: 8px; }
+    .crop-desc { font-size: 0.75rem; color: var(--gray-500); background: var(--gray-50); border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .crop-actions { border-top: 1px solid var(--gray-100); padding-top: 12px; display: flex; gap: 8px; }
+    .crop-contact-btn {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--green-600); color: #fff; border: none; border-radius: 12px;
+      padding: 10px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+      text-decoration: none;
+    }
+    .crop-contact-btn:hover { background: var(--green-700); }
+    .crop-edit-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: #eff6ff; color: #2563eb; border: none; border-radius: 12px;
+      padding: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .crop-edit-btn:hover { background: #dbeafe; }
+    .crop-del-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--red-50); color: var(--red-600); border: none; border-radius: 12px;
+      padding: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .crop-del-btn:hover { background: #fee2e2; }
+    .best-deal-badge {
+      position: absolute; top: 12px; right: 12px; z-index: 5;
+      background: var(--amber-400); color: var(--amber-900);
+      font-size: 0.7rem; font-weight: 700; padding: 4px 10px;
+      border-radius: 9999px; display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ── Browse ── */
+    .browse-header {
+      background: linear-gradient(135deg, var(--green-700), var(--emerald-800));
+      padding: 40px 24px 32px; color: #fff;
+    }
+    .browse-header h1 { font-size: 1.875rem; font-weight: 900; margin-bottom: 6px; }
+    .search-bar { position: relative; max-width: 640px; margin-top: 20px; }
+    .search-bar input {
+      width: 100%; padding: 14px 48px; background: #fff; border: none;
+      border-radius: 16px; font-size: 0.9rem; font-family: inherit;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12); outline: none;
+    }
+    .search-bar .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+    .search-bar .clear-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--gray-400); cursor: pointer; padding: 4px; }
+    .filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .filter-select {
+      padding: 10px 32px 10px 14px; border: 1px solid var(--gray-200);
+      border-radius: 12px; font-size: 0.875rem; font-family: inherit;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+      appearance: none; cursor: pointer; outline: none; transition: all 0.15s;
+    }
+    .filter-select:hover { border-color: var(--green-300); }
+    .filter-select:focus { border-color: var(--green-500); box-shadow: 0 0 0 3px rgba(34,197,94,.1); }
+    .price-panel { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; margin-bottom: 20px; }
+    .price-panel input { width: 120px; padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 0.875rem; font-family: inherit; outline: none; }
+    .price-panel input:focus { border-color: var(--green-500); }
+    .active-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+    }
+    .active-tag button { background: none; border: none; cursor: pointer; padding: 0; line-height: 1; display: flex; align-items: center; }
+    .clear-btn-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border: 1px solid #fecaca; background: var(--red-50);
+      color: var(--red-600); border-radius: 12px; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .clear-btn-pill:hover { background: #fee2e2; }
+    .results-info { font-size: 0.875rem; color: var(--gray-500); margin-bottom: 20px; }
+    .results-info strong { color: var(--gray-800); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5);
+      backdrop-filter: blur(4px); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-box {
+      background: #fff; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,.25);
+      width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+      animation: scaleIn 0.25s ease;
+    }
+    .modal-header {
+      position: sticky; top: 0; background: #fff;
+      border-bottom: 1px solid var(--gray-100); padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-radius: 20px 20px 0 0;
+    }
+    .modal-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 8px; }
+    .modal-close { background: none; border: none; padding: 6px; border-radius: 8px; cursor: pointer; color: var(--gray-500); transition: all 0.15s; }
+    .modal-close:hover { background: var(--gray-100); }
+    .modal-body { padding: 24px; }
+    .modal-sm { max-width: 380px; }
+    .confirm-icon { width: 56px; height: 56px; background: var(--red-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; }
+
+    /* ── Toast ── */
+    #toast-container { position: fixed; top: 80px; right: 16px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+    .toast {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 16px; border-radius: 12px; border: 1px solid;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1); max-width: 340px;
+      animation: slideDown 0.25s ease;
+      font-size: 0.875rem; font-weight: 500;
+    }
+    .toast.success { background: var(--green-50); border-color: var(--green-200); color: var(--green-800); }
+    .toast.error { background: var(--red-50); border-color: #fecaca; color: var(--red-700); }
+    .toast.warning { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .toast-close { background: none; border: none; cursor: pointer; margin-left: auto; opacity: 0.6; flex-shrink: 0; padding: 0; }
+    .toast-close:hover { opacity: 1; }
+
+    /* ── Loading page ── */
+    .loading-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: linear-gradient(135deg, var(--green-50), #ecfdf5); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links, .nav-right { display: none; }
+      .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+      .role-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .filter-bar { gap: 8px; }
+      .filter-select { font-size: 0.8rem; padding: 8px 28px 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="navigate('home')">
+      <div class="nav-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <span id="nav-appname">FarmPulse</span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <button class="nav-link" onclick="navigate('home')" data-page="home" id="nl-home">Home</button>
+      <button class="nav-link" onclick="navigate('browse')" data-page="browse" id="nl-browse">Browse Crops</button>
+      <button class="nav-link hidden" onclick="navigate('dashboard')" data-page="dashboard" id="nl-dashboard">Dashboard</button>
+    </div>
+    <div class="nav-right" id="nav-right">
+      <div style="display:flex;gap:4px;" id="lang-btns">
+        <button class="lang-btn active" onclick="setLang('en')">🇬🇧 EN</button>
+        <button class="lang-btn" onclick="setLang('te')">🇮🇳 TE</button>
+        <button class="lang-btn" onclick="setLang('hi')">🇮🇳 HI</button>
+      </div>
+      <div id="nav-auth-btns" style="display:flex;gap:8px;">
+        <button class="btn-outline" onclick="navigate('login')" id="nav-login-btn">Login</button>
+        <button class="btn-primary" onclick="navigate('signup')" id="nav-signup-btn">Sign Up</button>
+      </div>
+      <div id="nav-user-area" class="hidden" style="display:flex;align-items:center;gap:8px;">
+        <div class="user-chip">
+          <div class="user-avatar" id="nav-avatar">R</div>
+          <div>
+            <div style="font-weight:700;font-size:0.875rem;color:var(--green-800);" id="nav-username">Ravi</div>
+            <div style="font-size:0.7rem;color:var(--green-600);text-transform:capitalize;" id="nav-role">farmer</div>
+          </div>
+        </div>
+        <button class="btn-ghost" style="color:var(--red-600);" onclick="handleLogout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;display:inline;vertical-align:middle;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span id="nav-logout">Logout</span>
+        </button>
+      </div>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <svg id="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-800)" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu">
+    <button class="nav-link" style="width:100%;text-align:left;margin-bottom:4px;" onclick="navigate('home');closeMobileMenu()">🏠 Home</button>
+    <button class="nav-link" style="width:100%;text-align:left;margin-bottom:4px;" onclick="navigate('browse');closeMobileMenu()">🛒 Browse Crops</button>
+    <button class="nav-link hidden" id="mm-dashboard" style="width:100%;text-align:left;margin-bottom:4px;" onclick="navigate('dashboard');closeMobileMenu()">📊 Dashboard</button>
+    <div style="display:flex;gap:6px;margin:10px 0;padding-top:10px;border-top:1px solid var(--gray-100);">
+      <button class="lang-btn active" onclick="setLang('en');closeMobileMenu()">🇬🇧 EN</button>
+      <button class="lang-btn" onclick="setLang('te');closeMobileMenu()">🇮🇳 TE</button>
+      <button class="lang-btn" onclick="setLang('hi');closeMobileMenu()">🇮🇳 HI</button>
+    </div>
+    <div id="mm-auth" style="display:flex;gap:8px;padding-top:8px;border-top:1px solid var(--gray-100);">
+      <button class="btn-outline" style="flex:1;" onclick="navigate('login');closeMobileMenu()">Login</button>
+      <button class="btn-primary" style="flex:1;" onclick="navigate('signup');closeMobileMenu()">Sign Up</button>
+    </div>
+    <div id="mm-user" class="hidden" style="padding-top:8px;border-top:1px solid var(--gray-100);">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;">
+        <div class="user-avatar" id="mm-avatar">R</div>
+        <div>
+          <div style="font-weight:700;font-size:0.875rem;" id="mm-username">Ravi</div>
+          <div style="font-size:0.7rem;color:var(--gray-500);text-transform:capitalize;" id="mm-role">farmer</div>
+        </div>
+      </div>
+      <button class="btn-ghost" style="color:var(--red-600);width:100%;text-align:left;" onclick="handleLogout();closeMobileMenu()">🚪 Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════
+     TOAST CONTAINER
+════════════════════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE: HOME
+════════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero" style="padding-top:64px;">
+    <div class="section-inner hero-content fade-in">
+      <div class="hero-badge">🌱 <span>Andhra Pradesh's #1 Farm Marketplace</span></div>
+      <h1 id="hero-title">Fresh from Farm<br/><span>to Your Table</span></h1>
+      <p id="hero-sub">Connect directly with local farmers. Get the freshest produce at the best prices.</p>
+      <div class="hero-btns" id="hero-btns">
+        <button class="hero-btn-primary" onclick="navigate('signup')">Get Started →</button>
+        <button class="hero-btn-secondary" onclick="navigate('browse')">🛒 Browse Crops</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="val">24</div><div class="lbl">Villages Covered</div></div>
+        <div class="hero-stat"><div class="val">8+</div><div class="lbl">Crop Categories</div></div>
+        <div class="hero-stat"><div class="val">100%</div><div class="lbl">Direct Connections</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Cards -->
+  <div class="section" style="background:#fff;">
+    <div class="section-inner">
+      <div class="role-grid">
+        <div class="role-card farmer">
+          <div style="font-size:2rem;margin-bottom:12px;">🌾</div>
+          <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:8px;" id="for-farmers-title">For Farmers</h2>
+          <p style="opacity:.85;font-size:.9rem;margin-bottom:16px;" id="for-farmers-desc">List your crops, set your price, and connect directly with buyers in your region.</p>
+          <ul>
+            <li>✅ List unlimited crops</li>
+            <li>✅ Set your own prices</li>
+            <li>✅ Manage inventory easily</li>
+            <li>✅ Connect with buyers directly</li>
+          </ul>
+          <button class="role-card-btn" onclick="navigate('signup')">Start Selling →</button>
+        </div>
+        <div class="role-card buyer">
+          <div style="font-size:2rem;margin-bottom:12px;">🛒</div>
+          <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:8px;" id="for-buyers-title">For Buyers</h2>
+          <p style="opacity:.85;font-size:.9rem;margin-bottom:16px;" id="for-buyers-desc">Browse fresh produce from local farmers, filter by village, compare prices, and buy directly.</p>
+          <ul>
+            <li>✅ Filter by village &amp; category</li>
+            <li>✅ Compare prices instantly</li>
+            <li>✅ See best deals highlighted</li>
+            <li>✅ Contact farmers directly</li>
+          </ul>
+          <button class="role-card-btn" onclick="navigate('browse')">Browse Crops →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section" style="background:var(--gray-50);">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:48px;">
+        <h2 class="section-title">Why FarmPulse?</h2>
+        <p class="section-sub">Built for the farming communities of Andhra Pradesh</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card"><div class="feature-icon" style="background:var(--green-50);">🌱</div><h3 style="font-weight:700;margin-bottom:6px;">Direct from Farm</h3><p style="font-size:.875rem;color:var(--gray-600);">No middlemen. Buy directly from farmers in your region.</p></div>
+        <div class="feature-card"><div class="feature-icon" style="background:#eff6ff;">📉</div><h3 style="font-weight:700;margin-bottom:6px;">Best Prices</h3><p style="font-size:.875rem;color:var(--gray-600);">Compare prices across villages and find the best deals automatically.</p></div>
+        <div class="feature-card"><div class="feature-icon" style="background:#f5f3ff;">📍</div><h3 style="font-weight:700;margin-bottom:6px;">Local Villages</h3><p style="font-size:.875rem;color:var(--gray-600);">Filter crops by 24 specific villages in West Godavari district.</p></div>
+        <div class="feature-card"><div class="feature-icon" style="background:#fffbeb;">🛡️</div><h3 style="font-weight:700;margin-bottom:6px;">Verified Farmers</h3><p style="font-size:.875rem;color:var(--gray-600);">All listings are from registered and verified local farmers.</p></div>
+        <div class="feature-card"><div class="feature-icon" style="background:#fef2f2;">⚡</div><h3 style="font-weight:700;margin-bottom:6px;">Instant Contact</h3><p style="font-size:.875rem;color:var(--gray-600);">Get farmer contact details instantly and close deals fast.</p></div>
+        <div class="feature-card"><div class="feature-icon" style="background:#f0fdfa;">🤝</div><h3 style="font-weight:700;margin-bottom:6px;">Community</h3><p style="font-size:.875rem;color:var(--gray-600);">Join a growing community of farmers and buyers in Andhra Pradesh.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="section" style="background:#fff;">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:48px;">
+        <h2 class="section-title" id="how-it-works-title">How It Works</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-icon">👤</div><div class="step-num">01</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;" id="step1-title">Sign Up</h3><p style="color:var(--gray-600);font-size:.9rem;" id="step1-desc">Create your account as a farmer or buyer</p></div>
+        <div class="step-card"><div class="step-icon">🌾</div><div class="step-num">02</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;" id="step2-title">List or Browse</h3><p style="color:var(--gray-600);font-size:.9rem;" id="step2-desc">Farmers list crops, buyers browse and filter</p></div>
+        <div class="step-card"><div class="step-icon">✅</div><div class="step-num">03</div><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:6px;" id="step3-title">Connect</h3><p style="color:var(--gray-600);font-size:.9rem;" id="step3-desc">Contact directly and complete the transaction</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Villages -->
+  <div class="villages-section">
+    <div class="section-inner" style="text-align:center;">
+      <h2 style="font-size:1.75rem;font-weight:900;color:#fff;margin-bottom:8px;">Serving 24 Villages</h2>
+      <p style="color:#86efac;">West Godavari District, Andhra Pradesh</p>
+      <div class="village-tags" id="village-tags"></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section" style="background:#fff;text-align:center;">
+    <div class="section-inner" style="max-width:640px;">
+      <h2 class="section-title">Ready to get started?</h2>
+      <p class="section-sub">Join thousands of farmers and buyers connecting directly.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+        <button class="hero-btn-primary" onclick="navigate('signup')">Create Free Account →</button>
+        <button class="hero-btn-secondary" style="background:none;border:2px solid var(--green-600);color:var(--green-700);" onclick="navigate('browse')">🛒 Browse Crops</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-logo">🌱 <strong>FarmPulse</strong> <span>— Connecting Farmers &amp; Buyers</span></div>
+    <span style="font-size:.8rem;">© 2024 FarmPulse. West Godavari, Andhra Pradesh.</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE: LOGIN
+════════════════════════════════════════════════════════ -->
+<div id="page-login" class="page">
+  <div class="auth-page">
+    <div class="auth-card fade-in">
+      <div class="auth-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="nav-logo-icon" style="width:40px;height:40px;">🌱</div>
+          <span style="font-weight:800;font-size:1.1rem;">FarmPulse</span>
+        </div>
+        <h1 id="login-title">Welcome Back</h1>
+        <p id="login-sub">Sign in to your account</p>
+      </div>
+      <div class="auth-body">
+        <div id="login-error" class="api-error hidden"></div>
+        <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" id="lbl-email">Email Address *</label>
+            <div class="form-input-icon">
+              <span class="icon-left">✉️</span>
+              <input type="email" id="login-email" class="form-input" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="form-error hidden" id="login-email-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-password">Password *</label>
+            <div class="form-input-icon">
+              <span class="icon-left">🔒</span>
+              <input type="password" id="login-password" class="form-input" style="padding-left:40px;padding-right:40px;" placeholder="Your password" autocomplete="current-password" />
+              <button type="button" class="icon-right" onclick="togglePassword('login-password',this)">👁️</button>
+            </div>
+            <div class="form-error hidden" id="login-pass-err"></div>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:14px;font-size:1rem;margin-top:8px;" id="login-submit-btn">
+            <span id="login-btn-text">Sign In →</span>
+            <span id="login-spinner" class="hidden"><span class="spinner spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>Signing in...</span>
+          </button>
+        </form>
+        <p class="auth-toggle" id="login-toggle">Don't have an account? <a onclick="navigate('signup')" id="login-toggle-link">Sign Up</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE: SIGNUP
+════════════════════════════════════════════════════════ -->
+<div id="page-signup" class="page">
+  <div class="auth-page">
+    <div class="auth-card fade-in">
+      <div class="auth-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="nav-logo-icon" style="width:40px;height:40px;">🌱</div>
+          <span style="font-weight:800;font-size:1.1rem;">FarmPulse</span>
+        </div>
+        <h1 id="signup-title">Create Account</h1>
+        <p id="signup-sub">Create your free account today</p>
+      </div>
+      <div class="auth-body">
+        <div id="signup-error" class="api-error hidden"></div>
+        <form id="signup-form" onsubmit="handleSignup(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" id="lbl-name">Full Name *</label>
+            <div class="form-input-icon">
+              <span class="icon-left">👤</span>
+              <input type="text" id="signup-name" class="form-input" placeholder="Your full name" />
+            </div>
+            <div class="form-error hidden" id="signup-name-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <div class="form-input-icon">
+              <span class="icon-left">✉️</span>
+              <input type="email" id="signup-email" class="form-input" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="form-error hidden" id="signup-email-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <div class="form-input-icon">
+              <span class="icon-left">🔒</span>
+              <input type="password" id="signup-password" class="form-input" style="padding-left:40px;padding-right:40px;" placeholder="At least 6 characters" autocomplete="new-password" />
+              <button type="button" class="icon-right" onclick="togglePassword('signup-password',this)">👁️</button>
+            </div>
+            <div class="form-error hidden" id="signup-pass-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-role">I am a *</label>
+            <div class="role-picker">
+              <button type="button" class="role-option" id="role-farmer" onclick="selectRole('farmer')">
+                <span class="emoji">🌾</span><span id="role-farmer-label">Farmer (Seller)</span>
+              </button>
+              <button type="button" class="role-option" id="role-buyer" onclick="selectRole('buyer')">
+                <span class="emoji">🛒</span><span id="role-buyer-label">Buyer</span>
+              </button>
+            </div>
+            <div class="form-error hidden" id="signup-role-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lbl-phone">Phone Number <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+            <div class="form-input-icon">
+              <span class="icon-left">📱</span>
+              <input type="tel" id="signup-phone" class="form-input" placeholder="10-digit mobile number" maxlength="10" />
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:14px;font-size:1rem;margin-top:8px;" id="signup-submit-btn">
+            <span id="signup-btn-text">Create Account →</span>
+            <span id="signup-spinner" class="hidden"><span class="spinner spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>Creating...</span>
+          </button>
+        </form>
+        <p class="auth-toggle">Already have an account? <a onclick="navigate('login')">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE: DASHBOARD
+════════════════════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard-page">
+    <div class="page-inner">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title" id="dash-title">My Dashboard</h1>
+          <p class="page-sub" id="dash-welcome">Welcome back 👋</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline" onclick="loadDashboard()" style="display:flex;align-items:center;gap:6px;">🔄 Refresh</button>
+          <button class="btn-primary" onclick="openCropForm()" style="display:flex;align-items:center;gap:6px;">➕ <span id="add-crop-btn-text">Add New Crop</span></button>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="background:#eff6ff;">📦</div><div class="stat-value" id="stat-total">0</div><div class="stat-label" id="stat-total-lbl">Total Crops</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:var(--green-50);">🌱</div><div class="stat-value" id="stat-avail">0</div><div class="stat-label">Available</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#fffbeb;">📈</div><div class="stat-value" id="stat-sold">0</div><div class="stat-label">Sold Out</div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:#f5f3ff;">💰</div><div class="stat-value" id="stat-revenue">₹0</div><div class="stat-label" id="stat-rev-lbl">Potential Revenue</div></div>
+      </div>
+      <!-- Crops Panel -->
+      <div class="crops-panel">
+        <div class="crops-panel-header">
+          <h2 style="font-weight:700;font-size:1.1rem;" id="my-crops-title">My Crop Listings</h2>
+          <span id="dash-crop-count" style="font-size:.8rem;color:var(--gray-500);background:var(--gray-100);padding:4px 12px;border-radius:9999px;">0 listings</span>
+        </div>
+        <div class="crops-panel-body" id="dashboard-crops-body">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;gap:12px;">
+            <div class="spinner spinner-lg"></div>
+            <p style="color:var(--gray-500);">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE: BROWSE
+════════════════════════════════════════════════════════ -->
+<div id="page-browse" class="page">
+  <div class="browse-header">
+    <div class="section-inner">
+      <h1 id="browse-title">Browse Available Crops</h1>
+      <p style="color:#bbf7d0;font-size:.9rem;">Fresh produce from 24 villages in West Godavari</p>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search crops..." oninput="onSearchInput()" />
+        <button class="clear-btn hidden" id="search-clear" onclick="clearSearch()">✕</button>
+      </div>
+    </div>
+  </div>
+  <div class="section-inner" style="padding:24px;">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <select class="filter-select" id="filter-village" onchange="applyFilters()">
+        <option value="">All Villages</option>
+      </select>
+      <select class="filter-select" id="filter-category" onchange="applyFilters()">
+        <option value="">All Categories</option>
+        <option value="vegetables">🥦 Vegetables</option>
+        <option value="fruits">🍎 Fruits</option>
+        <option value="grains">🌾 Grains &amp; Cereals</option>
+        <option value="pulses">🫘 Pulses &amp; Legumes</option>
+        <option value="spices">🌶️ Spices</option>
+        <option value="leafy-greens">🥬 Leafy Greens</option>
+        <option value="flowers">🌸 Flowers</option>
+        <option value="other">🌱 Other</option>
+      </select>
+      <select class="filter-select" id="filter-sort" onchange="applyFilters()">
+        <option value="">Newest First</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+      </select>
+      <button onclick="togglePricePanel()" id="price-toggle-btn" style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid var(--gray-200);border-radius:12px;background:#fff;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--green-300)'" onmouseout="this.style.borderColor='var(--gray-200)'">
+        ⚙️ Price Range
+      </button>
+      <button class="clear-btn-pill hidden" id="clear-filters-btn" onclick="clearAllFilters()">✕ Clear Filters</button>
+      <button onclick="loadBrowse()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--gray-500);padding:8px;border-radius:8px;" title="Refresh">🔄</button>
+    </div>
+    <!-- Price Panel -->
+    <div class="price-panel hidden" id="price-panel">
+      <div>
+        <label style="font-size:.75rem;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px;">Min Price (₹)</label>
+        <input type="number" id="min-price" placeholder="0" min="0" />
+      </div>
+      <div>
+        <label style="font-size:.75rem;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px;">Max Price (₹)</label>
+        <input type="number" id="max-price" placeholder="∞" min="0" />
+      </div>
+      <button class="btn-primary" onclick="applyFilters()">Apply Filters</button>
+    </div>
+    <!-- Active Tags -->
+    <div id="active-tags" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;"></div>
+    <!-- Results Info -->
+    <div id="results-info" class="results-info"></div>
+    <!-- Crops Grid -->
+    <div id="browse-crops-body">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;gap:12px;">
+        <div class="spinner spinner-lg"></div>
+        <p style="color:var(--gray-500);">Loading crops...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     CROP FORM MODAL
+════════════════════════════════════════════════════════ -->
+<div id="crop-modal" class="modal-overlay hidden" onclick="closeCropModalOnBg(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>🌿 <span id="crop-modal-title">Add New Crop</span></h2>
+      <button class="modal-close" onclick="closeCropModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="crop-form-error" class="api-error hidden"></div>
+      <form id="crop-form" onsubmit="handleSaveCrop(event)" novalidate>
+        <input type="hidden" id="crop-id" />
+        <div class="form-group">
+          <label class="form-label">Crop Name *</label>
+          <input type="text" id="crop-name" class="form-input" placeholder="e.g., Tomato, Rice, Onion" maxlength="100" />
+          <div class="form-error hidden" id="crop-name-err"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="crop-category" class="form-input" style="cursor:pointer;">
+            <option value="vegetables">🥦 Vegetables</option>
+            <option value="fruits">🍎 Fruits</option>
+            <option value="grains">🌾 Grains &amp; Cereals</option>
+            <option value="pulses">🫘 Pulses &amp; Legumes</option>
+            <option value="spices">🌶️ Spices</option>
+            <option value="leafy-greens">🥬 Leafy Greens</option>
+            <option value="flowers">🌸 Flowers</option>
+            <option value="other">🌱 Other</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Price (₹) *</label>
+            <input type="number" id="crop-price" class="form-input" placeholder="0.00" min="0.01" step="0.01" />
+            <div class="form-error hidden" id="crop-price-err"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quantity *</label>
+            <div style="display:flex;gap:6px;">
+              <input type="number" id="crop-quantity" class="form-input" placeholder="0" min="0.01" step="0.01" style="flex:1;min-width:0;" />
+              <select id="crop-unit" class="form-input" style="width:80px;cursor:pointer;padding:12px 6px;">
+                <option value="kg">kg</option>
+                <option value="quintal">quintal</option>
+                <option value="ton">ton</option>
+                <option value="bundle">bundle</option>
+                <option value="dozen">dozen</option>
+                <option value="piece">piece</option>
+              </select>
+            </div>
+            <div class="form-error hidden" id="crop-qty-err"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Village *</label>
+          <select id="crop-village" class="form-input" style="cursor:pointer;">
+            <option value="">Select Village</option>
+          </select>
+          <div class="form-error hidden" id="crop-village-err"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contact Number *</label>
+          <input type="tel" id="crop-contact" class="form-input" placeholder="10-digit mobile number" maxlength="10" />
+          <div class="form-error hidden" id="crop-contact-err"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+          <textarea id="crop-description" class="form-input" rows="3" placeholder="Quality, harvest date, special notes..." maxlength="500" style="resize:none;"></textarea>
+          <div style="text-align:right;font-size:.7rem;color:var(--gray-400);margin-top:2px;" id="desc-counter">0/500</div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button type="button" class="btn-outline" style="flex:1;" onclick="closeCropModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex:1;" id="crop-save-btn">
+            <span id="crop-save-text">💾 Save Crop</span>
+            <span id="crop-save-spinner" class="hidden"><span class="spinner spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:6px;"></span>Saving...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     DELETE CONFIRM MODAL
+════════════════════════════════════════════════════════ -->
+<div id="delete-modal" class="modal-overlay hidden" onclick="closeDeleteModalOnBg(event)">
+  <div class="modal-box modal-sm scale-in">
+    <div class="modal-body" style="text-align:center;padding:32px 24px;">
+      <div class="confirm-icon">⚠️</div>
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:8px;">Delete Crop</h3>
+      <p style="color:var(--gray-600);font-size:.9rem;margin-bottom:6px;">Are you sure you want to delete</p>
+      <p style="font-weight:700;color:var(--gray-800);margin-bottom:24px;" id="delete-crop-name">"Tomato"</p>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-outline" style="flex:1;" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn-danger" style="flex:1;" onclick="confirmDelete()" id="delete-confirm-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+const VILLAGES = [
+  'Bhimavaram','Gollalakoderu','Garagaparru','Saggapadu','Kesavaram',
+  'Veeravasaram','Rayalam','Taderu','Chinamiram','Pedamiram',
+  'Palakoderu','Undi','Kalla','Mogallu','Vempa','Dirusumarru',
+  'Juvvalapalem','Sivaramapuram','Annavaram','Kakaraparru',
+  'Kalipatnam','Yelamanchili','Penumantra','Bhimadole'
+];
+
+const CATEGORY_ICONS = {
+  vegetables:'🥦', fruits:'🍎', grains:'🌾', pulses:'🫘',
+  spices:'🌶️', 'leafy-greens':'🥬', flowers:'🌸', other:'🌱'
+};
+const CATEGORY_LABELS = {
+  vegetables:'Vegetables', fruits:'Fruits', grains:'Grains & Cereals',
+  pulses:'Pulses & Legumes', spices:'Spices', 'leafy-greens':'Leafy Greens',
+  flowers:'Flowers', other:'Other'
+};
+
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
+const TRANSLATIONS = {
+  en: {
+    appName:'FarmPulse', home:'Home', browse:'Browse Crops', dashboard:'Dashboard',
+    login:'Login', signup:'Sign Up', logout:'Logout',
+    heroTitle:'Fresh from Farm<br/><span>to Your Table</span>',
+    heroSub:'Connect directly with local farmers. Get the freshest produce at the best prices.',
+    getStarted:'Get Started →', browseCrops:'Browse Crops',
+    forFarmers:'For Farmers', forBuyers:'For Buyers',
+    forFarmersDesc:'List your crops, set your price, and connect directly with buyers in your region.',
+    forBuyersDesc:'Browse fresh produce from local farmers, filter by village, compare prices, and buy directly.',
+    howItWorks:'How It Works',
+    step1:'Sign Up', step1Desc:'Create your account as a farmer or buyer',
+    step2:'List or Browse', step2Desc:'Farmers list crops, buyers browse and filter',
+    step3:'Connect', step3Desc:'Contact directly and complete the transaction',
+    loginTitle:'Welcome Back', loginSub:'Sign in to your account',
+    signupTitle:'Create Account', signupSub:'Create your free account today',
+    loginBtn:'Sign In →', signupBtn:'Create Account →',
+    noAccount:"Don't have an account?", hasAccount:'Already have an account?',
+    nameLabel:'Full Name', emailLabel:'Email Address', passLabel:'Password',
+    roleLabel:'I am a', phoneLabel:'Phone Number',
+    farmerRole:'Farmer (Seller)', buyerRole:'Buyer',
+    myDashboard:'My Dashboard', totalCrops:'Total Crops', potRevenue:'Potential Revenue',
+    addCrop:'Add New Crop', myCrops:'My Crop Listings',
+    browseCropsTitle:'Browse Available Crops',
+    allVillages:'All Villages', allCategories:'All Categories',
+    newestFirst:'Newest First', priceLowHigh:'Price: Low to High', priceHighLow:'Price: High to Low',
+    searchPlaceholder:'Search crops...',
+    noCrops:'No crops added yet', noCropsMsg:'Start by adding your first crop listing',
+    noResults:'No crops available in your village', noResultsFilter:'No crops match your filters',
+    bestDeal:'🏆 Best Deal', contactFarmer:'Contact Farmer',
+    saveCrop:'💾 Save Crop', editCrop:'Edit Crop', deleteCrop:'Delete Crop', cancel:'Cancel',
+    required:'This field is required', invalidEmail:'Invalid email format',
+    shortPass:'Password must be at least 6 characters',
+    invalidPhone:'Enter a valid 10-digit Indian mobile number (starts with 6-9)',
+    negativePrice:'Price must be a positive number',
+    invalidQty:'Quantity must be a positive number',
+    invalidVillage:'Please select a valid village',
+    networkError:'Network error. Please check your connection.',
+    loading:'Loading...', retry:'Try Again',
+  },
+  te: {
+    appName:'ఫార్మ్‌పల్స్', home:'హోమ్', browse:'పంటలు చూడండి', dashboard:'డాష్‌బోర్డ్',
+    login:'లాగిన్', signup:'నమోదు', logout:'లాగ్అవుట్',
+    heroTitle:'పొలం నుండి మీ టేబుల్ వరకు<br/><span>తాజాగా</span>',
+    heroSub:'స్థానిక రైతులతో నేరుగా అనుసంధానమవ్వండి. అత్యుత్తమ ధరలకు తాజా పంటలు పొందండి.',
+    getStarted:'ప్రారంభించండి →', browseCrops:'పంటలు చూడండి',
+    forFarmers:'రైతుల కోసం', forBuyers:'కొనుగోలుదారుల కోసం',
+    forFarmersDesc:'మీ పంటలను జాబితా చేయండి, ధర నిర్ణయించండి, మీ ప్రాంతంలో కొనుగోలుదారులతో నేరుగా అనుసంధానమవ్వండి.',
+    forBuyersDesc:'స్థానిక రైతుల నుండి తాజా పంటలు బ్రౌజ్ చేయండి, గ్రామం ద్వారా ఫిల్టర్ చేయండి, ధరలు పోల్చండి.',
+    howItWorks:'ఇది ఎలా పని చేస్తుంది',
+    step1:'నమోదు', step1Desc:'రైతు లేదా కొనుగోలుదారుగా ఖాతా సృష్టించండి',
+    step2:'జాబితా లేదా బ్రౌజ్', step2Desc:'రైతులు పంటలు జాబితా చేస్తారు, కొనుగోలుదారులు బ్రౌజ్ చేస్తారు',
+    step3:'అనుసంధానం', step3Desc:'నేరుగా సంప్రదించి లావాదేవీ పూర్తి చేయండి',
+    loginTitle:'స్వాగతం', loginSub:'మీ ఖాతాలో సైన్ ఇన్ చేయండి',
+    signupTitle:'ఖాతా సృష్టించండి', signupSub:'నేడే మీ ఉచిత ఖాతా సృష్టించండి',
+    loginBtn:'సైన్ ఇన్ →', signupBtn:'ఖాతా సృష్టించండి →',
+    noAccount:'ఖాతా లేదా?', hasAccount:'ఇప్పటికే ఖాతా ఉందా?',
+    nameLabel:'పూర్తి పేరు', emailLabel:'ఇమెయిల్ చిరునామా', passLabel:'పాస్‌వర్డ్',
+    roleLabel:'నేను', phoneLabel:'ఫోన్ నంబర్',
+    farmerRole:'రైతు (విక్రేత)', buyerRole:'కొనుగోలుదారు',
+    myDashboard:'నా డాష్‌బోర్డ్', totalCrops:'మొత్తం పంటలు', potRevenue:'సంభావ్య ఆదాయం',
+    addCrop:'కొత్త పంట జోడించండి', myCrops:'నా పంట జాబితాలు',
+    browseCropsTitle:'అందుబాటులో ఉన్న పంటలు',
+    allVillages:'అన్ని గ్రామాలు', allCategories:'అన్ని వర్గాలు',
+    newestFirst:'కొత్తవి ముందు', priceLowHigh:'ధర: తక్కువ నుండి ఎక్కువ', priceHighLow:'ధర: ఎక్కువ నుండి తక్కువ',
+    searchPlaceholder:'పంటలు వెతకండి...',
+    noCrops:'ఇంకా పంటలు జోడించలేదు', noCropsMsg:'మీ మొదటి పంట జాబితాను జోడించండి',
+    noResults:'మీ గ్రామంలో పంటలు అందుబాటులో లేవు', noResultsFilter:'మీ ఫిల్టర్‌లకు సరిపోలే పంటలు లేవు',
+    bestDeal:'🏆 అత్యుత్తమ డీల్', contactFarmer:'రైతుని సంప్రదించండి',
+    saveCrop:'💾 పంట సేవ్ చేయండి', editCrop:'సవరించండి', deleteCrop:'తొలగించండి', cancel:'రద్దు',
+    required:'ఈ ఫీల్డ్ అవసరం', invalidEmail:'చెల్లని ఇమెయిల్ ఫార్మాట్',
+    shortPass:'పాస్‌వర్డ్ కనీసం 6 అక్షరాలు ఉండాలి',
+    invalidPhone:'చెల్లని 10-అంకెల మొబైల్ నంబర్ నమోదు చేయండి',
+    negativePrice:'ధర సానుకూలంగా ఉండాలి', invalidQty:'పరిమాణం సానుకూలంగా ఉండాలి',
+    invalidVillage:'చెల్లని గ్రామం', networkError:'నెట్‌వర్క్ లోపం.',
+    loading:'లోడ్ అవుతోంది...', retry:'మళ్ళీ ప్రయత్నించండి',
+  },
+  hi: {
+    appName:'फार्मपल्स', home:'होम', browse:'फसलें देखें', dashboard:'डैशबोर्ड',
+    login:'लॉगिन', signup:'साइन अप', logout:'लॉगआउट',
+    heroTitle:'खेत से सीधे<br/><span>आपकी थाली तक</span>',
+    heroSub:'स्थानीय किसानों से सीधे जुड़ें। सबसे अच्छी कीमतों पर ताजी उपज पाएं।',
+    getStarted:'शुरू करें →', browseCrops:'फसलें देखें',
+    forFarmers:'किसानों के लिए', forBuyers:'खरीदारों के लिए',
+    forFarmersDesc:'अपनी फसलें सूचीबद्ध करें, कीमत तय करें, और अपने क्षेत्र में खरीदारों से सीधे जुड़ें।',
+    forBuyersDesc:'स्थानीय किसानों से ताजी उपज ब्राउज़ करें, गांव से फ़िल्टर करें, कीमतें तुलना करें।',
+    howItWorks:'यह कैसे काम करता है',
+    step1:'साइन अप', step1Desc:'किसान या खरीदार के रूप में खाता बनाएं',
+    step2:'सूचीबद्ध या ब्राउज़', step2Desc:'किसान फसलें सूचीबद्ध करते हैं, खरीदार ब्राउज़ करते हैं',
+    step3:'जुड़ें', step3Desc:'सीधे संपर्क करें और लेनदेन पूरा करें',
+    loginTitle:'वापस स्वागत है', loginSub:'अपने खाते में साइन इन करें',
+    signupTitle:'खाता बनाएं', signupSub:'आज अपना मुफ्त खाता बनाएं',
+    loginBtn:'साइन इन →', signupBtn:'खाता बनाएं →',
+    noAccount:'खाता नहीं है?', hasAccount:'पहले से खाता है?',
+    nameLabel:'पूरा नाम', emailLabel:'ईमेल पता', passLabel:'पासवर्ड',
+    roleLabel:'मैं हूं', phoneLabel:'फोन नंबर',
+    farmerRole:'किसान (विक्रेता)', buyerRole:'खरीदार',
+    myDashboard:'मेरा डैशबोर्ड', totalCrops:'कुल फसलें', potRevenue:'संभावित राजस्व',
+    addCrop:'नई फसल जोड़ें', myCrops:'मेरी फसल सूचियां',
+    browseCropsTitle:'उपलब्ध फसलें',
+    allVillages:'सभी गांव', allCategories:'सभी श्रेणियां',
+    newestFirst:'नवीनतम पहले', priceLowHigh:'कीमत: कम से ज़्यादा', priceHighLow:'कीमत: ज़्यादा से कम',
+    searchPlaceholder:'फसलें खोजें...',
+    noCrops:'अभी तक कोई फसल नहीं जोड़ी', noCropsMsg:'अपनी पहली फसल सूची जोड़ें',
+    noResults:'आपके गांव में कोई फसल उपलब्ध नहीं', noResultsFilter:'आपके फ़िल्टर से मेल खाने वाली कोई फसल नहीं',
+    bestDeal:'🏆 सबसे अच्छा सौदा', contactFarmer:'किसान से संपर्क करें',
+    saveCrop:'💾 फसल सहेजें', editCrop:'संपादित करें', deleteCrop:'हटाएं', cancel:'रद्द करें',
+    required:'यह फ़ील्ड आवश्यक है', invalidEmail:'अमान्य ईमेल प्रारूप',
+    shortPass:'पासवर्ड कम से कम 6 अक्षर होना चाहिए',
+    invalidPhone:'वैध 10-अंकीय मोबाइल नंबर दर्ज करें',
+    negativePrice:'कीमत सकारात्मक होनी चाहिए', invalidQty:'मात्रा सकारात्मक होनी चाहिए',
+    invalidVillage:'कृपया एक वैध गांव चुनें', networkError:'नेटवर्क त्रुटि।',
+    loading:'लोड हो रहा है...', retry:'पुनः प्रयास करें',
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let currentLang = localStorage.getItem('fp_lang') || 'en';
+let currentUser = null;
+let currentToken = null;
+let currentPage = 'home';
+let selectedRole = '';
+let cropToDelete = null;
+let editingCropId = null;
+let searchTimer = null;
+let allBrowseCrops = [];
+
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATION HELPER
+// ═══════════════════════════════════════════════════════════════
+function T(key) {
+  return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) ||
+         (TRANSLATIONS['en'] && TRANSLATIONS['en'][key]) || key;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  // Load stored auth
+  try {
+    const t = localStorage.getItem('fp_token');
+    const u = localStorage.getItem('fp_user');
+    if (t && u) { currentToken = t; currentUser = JSON.parse(u); }
+  } catch {}
+
+  // Populate village dropdowns
+  populateVillageDropdowns();
+
+  // Apply language
+  applyLanguage();
+
+  // Update navbar
+  updateNavbar();
+
+  // Load page from hash or default
+  const hash = location.hash.replace('#','') || 'home';
+  navigate(hash, true);
+
+  // Verify session in background
+  if (currentToken) verifySession();
+
+  // Description counter
+  const descEl = document.getElementById('crop-description');
+  if (descEl) descEl.addEventListener('input', () => {
+    document.getElementById('desc-counter').textContent = descEl.value.length + '/500';
+  });
+});
+
+function populateVillageDropdowns() {
+  // Filter village select
+  const fv = document.getElementById('filter-village');
+  VILLAGES.forEach(v => {
+    const o = document.createElement('option'); o.value = v; o.textContent = v;
+    fv.appendChild(o);
+  });
+  // Crop form village select
+  const cv = document.getElementById('crop-village');
+  VILLAGES.forEach(v => {
+    const o = document.createElement('option'); o.value = v; o.textContent = v;
+    cv.appendChild(o);
+  });
+  // Village tags on home
+  const vt = document.getElementById('village-tags');
+  VILLAGES.slice(0,10).forEach(v => {
+    const a = document.createElement('a');
+    a.className = 'village-tag';
+    a.innerHTML = `📍 ${v}`;
+    a.onclick = () => { navigate('browse'); setTimeout(() => { document.getElementById('filter-village').value = v; applyFilters(); }, 300); };
+    vt.appendChild(a);
+  });
+  const more = document.createElement('a');
+  more.className = 'village-tag';
+  more.style.background = 'rgba(34,197,94,.2)';
+  more.textContent = '+14 more villages';
+  more.onclick = () => navigate('browse');
+  vt.appendChild(more);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════════════════════
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('fp_lang', lang);
+  applyLanguage();
+  // Re-render current page content
+  if (currentPage === 'browse') loadBrowse();
+  if (currentPage === 'dashboard') loadDashboard();
+}
+
+function applyLanguage() {
+  // Lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(currentLang)) b.classList.add('active');
+  });
+
+  // Nav
+  setText('nav-appname', T('appName'));
+  setText('nl-home', T('home'));
+  setText('nl-browse', T('browse'));
+  setText('nl-dashboard', T('dashboard'));
+  setText('nav-login-btn', T('login'));
+  setText('nav-signup-btn', T('signup'));
+  setText('nav-logout', T('logout'));
+
+  // Home
+  setHTML('hero-title', T('heroTitle'));
+  setText('hero-sub', T('heroSub'));
+  setText('for-farmers-title', T('forFarmers'));
+  setText('for-buyers-title', T('forBuyers'));
+  setText('for-farmers-desc', T('forFarmersDesc'));
+  setText('for-buyers-desc', T('forBuyersDesc'));
+  setText('how-it-works-title', T('howItWorks'));
+  setText('step1-title', T('step1')); setText('step1-desc', T('step1Desc'));
+  setText('step2-title', T('step2')); setText('step2-desc', T('step2Desc'));
+  setText('step3-title', T('step3')); setText('step3-desc', T('step3Desc'));
+
+  // Auth
+  setText('login-title', T('loginTitle')); setText('login-sub', T('loginSub'));
+  setText('signup-title', T('signupTitle')); setText('signup-sub', T('signupSub'));
+  setText('lbl-name', T('nameLabel') + ' *');
+  setText('lbl-email', T('emailLabel') + ' *');
+  setText('lbl-password', T('passLabel') + ' *');
+  setText('lbl-role', T('roleLabel') + ' *');
+  setText('lbl-phone', T('phoneLabel'));
+  setText('role-farmer-label', T('farmerRole'));
+  setText('role-buyer-label', T('buyerRole'));
+  setText('login-btn-text', T('loginBtn'));
+  setText('signup-btn-text', T('signupBtn'));
+
+  // Dashboard
+  setText('dash-title', T('myDashboard'));
+  setText('stat-total-lbl', T('totalCrops'));
+  setText('stat-rev-lbl', T('potRevenue'));
+  setText('add-crop-btn-text', T('addCrop'));
+  setText('my-crops-title', T('myCrops'));
+  setText('crop-modal-title', editingCropId ? T('editCrop') : T('addCrop'));
+  setText('crop-save-text', T('saveCrop'));
+
+  // Browse
+  setText('browse-title', T('browseCropsTitle'));
+  const si = document.getElementById('search-input');
+  if (si) si.placeholder = T('searchPlaceholder');
+  const fv = document.getElementById('filter-village');
+  if (fv && fv.options[0]) fv.options[0].text = T('allVillages');
+  const fc = document.getElementById('filter-category');
+  if (fc && fc.options[0]) fc.options[0].text = T('allCategories');
+  const fs = document.getElementById('filter-sort');
+  if (fs) {
+    if (fs.options[0]) fs.options[0].text = T('newestFirst');
+    if (fs.options[1]) fs.options[1].text = T('priceLowHigh');
+    if (fs.options[2]) fs.options[2].text = T('priceHighLow');
+  }
+}
+
+function setText(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
+function setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function navigate(page, skipHistory) {
+  // Auth guards
+  if (page === 'dashboard') {
+    if (!currentUser) { navigate('login'); return; }
+    if (currentUser.role !== 'farmer') { navigate('browse'); return; }
+  }
+  if ((page === 'login' || page === 'signup') && currentUser) {
+    navigate(currentUser.role === 'farmer' ? 'dashboard' : 'browse'); return;
+  }
+
+  currentPage = page;
+  if (!skipHistory) history.pushState({}, '', '#' + page);
+
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+
+  // Update active nav link
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+
+  // Load data
+  if (page === 'browse') loadBrowse();
+  if (page === 'dashboard') loadDashboard();
+}
+
+window.addEventListener('popstate', () => {
+  const hash = location.hash.replace('#','') || 'home';
+  navigate(hash, true);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// NAVBAR
+// ═══════════════════════════════════════════════════════════════
+function updateNavbar() {
+  const authBtns = document.getElementById('nav-auth-btns');
+  const userArea = document.getElementById('nav-user-area');
+  const dashLink = document.getElementById('nl-dashboard');
+  const mmDash = document.getElementById('mm-dashboard');
+  const mmAuth = document.getElementById('mm-auth');
+  const mmUser = document.getElementById('mm-user');
+
+  if (currentUser) {
+    authBtns.classList.add('hidden'); authBtns.style.display = 'none';
+    userArea.classList.remove('hidden'); userArea.style.display = 'flex';
+    setText('nav-avatar', currentUser.name.charAt(0).toUpperCase());
+    setText('nav-username', currentUser.name.split(' ')[0]);
+    setText('nav-role', currentUser.role);
+    setText('mm-avatar', currentUser.name.charAt(0).toUpperCase());
+    setText('mm-username', currentUser.name);
+    setText('mm-role', currentUser.role);
+    setText('dash-welcome', 'Welcome back, ' + currentUser.name + ' 👋');
+    if (currentUser.role === 'farmer') {
+      dashLink.classList.remove('hidden'); mmDash.classList.remove('hidden');
+    }
+    if (mmAuth) { mmAuth.classList.add('hidden'); mmAuth.style.display = 'none'; }
+    if (mmUser) { mmUser.classList.remove('hidden'); mmUser.style.display = 'block'; }
+  } else {
+    authBtns.classList.remove('hidden'); authBtns.style.display = 'flex';
+    userArea.classList.add('hidden'); userArea.style.display = 'none';
+    dashLink.classList.add('hidden'); mmDash.classList.add('hidden');
+    if (mmAuth) { mmAuth.classList.remove('hidden'); mmAuth.style.display = 'flex'; }
+    if (mmUser) { mmUser.classList.add('hidden'); mmUser.style.display = 'none'; }
+  }
+
+  // Update hero buttons
+  const heroBtns = document.getElementById('hero-btns');
+  if (heroBtns && currentUser) {
+    heroBtns.innerHTML = `<button class="hero-btn-primary" onclick="navigate('${currentUser.role==='farmer'?'dashboard':'browse'}')">${currentUser.role==='farmer'?'Go to Dashboard':'Browse Crops'} →</button>`;
+  }
+}
+
+function toggleMobileMenu() {
+  const m = document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  let valid = true;
+
+  hideErr('login-email-err'); hideErr('login-pass-err'); hideEl('login-error');
+
+  if (!email) { showErr('login-email-err', T('required')); valid = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('login-email-err', T('invalidEmail')); valid = false; }
+  if (!password) { showErr('login-pass-err', T('required')); valid = false; }
+  else if (password.length < 6) { showErr('login-pass-err', T('shortPass')); valid = false; }
+  if (!valid) return;
+
+  setLoading('login-submit-btn', 'login-btn-text', 'login-spinner', true);
+
+  fetch('/api/auth?action=login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  })
+  .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+  .then(({ ok, data }) => {
+    if (!ok) { showEl('login-error', data.error || T('networkError')); return; }
+    saveAuth(data.token, data.user);
+    showToast('Welcome back, ' + data.user.name + '! 👋', 'success');
+    navigate(data.user.role === 'farmer' ? 'dashboard' : 'browse');
+  })
+  .catch(() => showEl('login-error', T('networkError')))
+  .finally(() => setLoading('login-submit-btn', 'login-btn-text', 'login-spinner', false));
+}
+
+function handleSignup(e) {
+  e.preventDefault();
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const phone = document.getElementById('signup-phone').value.trim();
+  let valid = true;
+
+  hideErr('signup-name-err'); hideErr('signup-email-err');
+  hideErr('signup-pass-err'); hideErr('signup-role-err'); hideEl('signup-error');
+
+  if (!name || name.length < 2) { showErr('signup-name-err', 'Name must be at least 2 characters'); valid = false; }
+  if (!email) { showErr('signup-email-err', T('required')); valid = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('signup-email-err', T('invalidEmail')); valid = false; }
+  if (!password) { showErr('signup-pass-err', T('required')); valid = false; }
+  else if (password.length < 6) { showErr('signup-pass-err', T('shortPass')); valid = false; }
+  if (!selectedRole) { showErr('signup-role-err', T('required')); valid = false; }
+  if (!valid) return;
+
+  setLoading('signup-submit-btn', 'signup-btn-text', 'signup-spinner', true);
+
+  fetch('/api/auth?action=signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password, role: selectedRole, phone: phone || null })
+  })
+  .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+  .then(({ ok, data }) => {
+    if (!ok) { showEl('signup-error', data.error || T('networkError')); return; }
+    saveAuth(data.token, data.user);
+    showToast('Welcome to FarmPulse, ' + data.user.name + '! 🌱', 'success');
+    navigate(data.user.role === 'farmer' ? 'dashboard' : 'browse');
+  })
+  .catch(() => showEl('signup-error', T('networkError')))
+  .finally(() => setLoading('signup-submit-btn', 'signup-btn-text', 'signup-spinner', false));
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('role-farmer').classList.toggle('selected', role === 'farmer');
+  document.getElementById('role-buyer').classList.toggle('selected', role === 'buyer');
+  hideErr('signup-role-err');
+}
+
+function handleLogout() {
+  currentUser = null; currentToken = null;
+  localStorage.removeItem('fp_token'); localStorage.removeItem('fp_user');
+  updateNavbar();
+  showToast('Logged out successfully', 'success');
+  navigate('home');
+}
+
+function saveAuth(token, user) {
+  currentToken = token; currentUser = user;
+  localStorage.setItem('fp_token', token);
+  localStorage.setItem('fp_user', JSON.stringify(user));
+  updateNavbar();
+}
+
+function verifySession() {
+  if (!currentToken) return;
+  fetch('/api/auth?action=verify', { headers: { Authorization: 'Bearer ' + currentToken } })
+    .then(r => { if (!r.ok) { handleLogout(); } else return r.json(); })
+    .then(d => { if (d && d.user) { currentUser = d.user; localStorage.setItem('fp_user', JSON.stringify(d.user)); updateNavbar(); } })
+    .catch(() => {});
+}
+
+function togglePassword(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁️'; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function loadDashboard() {
+  if (!currentUser || currentUser.role !== 'farmer') return;
+  const body = document.getElementById('dashboard-crops-body');
+  body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px;gap:12px;"><div class="spinner spinner-lg"></div><p style="color:var(--gray-500);">${T('loading')}</p></div>`;
+
+  fetch('/api/crops?farmer_id=' + currentUser.id, { headers: { Authorization: 'Bearer ' + currentToken } })
+    .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+    .then(({ ok, data }) => {
+      if (!ok) { renderDashboardError(data.error || T('networkError')); return; }
+      const crops = Array.isArray(data) ? data : [];
+      renderDashboardCrops(crops);
+      updateStats(crops);
+    })
+    .catch(() => renderDashboardError(T('networkError')));
+}
+
+function updateStats(crops) {
+  const avail = crops.filter(c => c.is_available).length;
+  const revenue = crops.reduce((s,c) => s + Number(c.price) * Number(c.quantity), 0);
+  setText('stat-total', crops.length);
+  setText('stat-avail', avail);
+  
