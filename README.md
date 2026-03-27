@@ -1,9 +1,8 @@
-FARMPULSE – CROP MARKETPLACE SYSTEM
-Project Overview
+_**Project Overview
 
 FarmPulse is a web-based application designed to connect farmers and buyers through a digital crop marketplace. It provides a simple and user-friendly interface for displaying crop details such as price, quantity, and location. The system allows farmers to manage their crop listings efficiently, while users can browse available crops and view important information before contacting farmers. The application focuses on creating a smooth and responsive user experience with features like search, filter, and sorting for better usability. The design is modern, clean, and suitable for both mobile and desktop users. Overall, the project aims to simplify agricultural trading through an easy-to-use and effective platform.
 
-Key Features:-
+Key Features
 1. Feature One
 
 Describe the first key feature of your project.
@@ -72,10 +71,8 @@ Future Scope
 Project Deployment
 
 The application is developed and executed in a local environment using Visual Studio Code. It runs on a local server (localhost) and demonstrates all frontend features successfully. The project can be deployed to a live platform such as Vercel for public access.
-
 References
-
-Source Code (GitHub):  https://github.com/24pa1a0515-svg/Farmpulse.git
+Source Code (GitHub): https://github.com/24pa1a0515-svg/Farmpulse.git
 https://reactjs.org
 
-h
+https://developer.mozilla.org******_
