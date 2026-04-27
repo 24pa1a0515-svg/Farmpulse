@@ -1,107 +1,1692 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>FarmPulse</title>
+  <meta charset="UTF-8" />
+  <title>FarmPulse – Crop Marketplace System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/a2c3b6a4d6.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --primary-from: #0f9b0f;
+      --primary-to: #00b09b;
+      --bg-dark: #06120b;
+      --bg-card: rgba(15, 23, 23, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.35);
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #052e16 0, #020617 55%, #020617 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* Glass card */
+    .glass {
+      background: linear-gradient(135deg, rgba(15, 23, 23, 0.95), rgba(15, 23, 42, 0.92));
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(18px);
+    }
+
+    .btn-primary {
+      background-image: linear-gradient(to right, var(--primary-from), var(--primary-to));
+      color: #f9fafb;
+      border-radius: 9999px;
+      padding: 0.7rem 1.6rem;
+      font-weight: 600;
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.45);
+    }
+
+    .btn-outline {
+      border-radius: 9999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 0.6rem 1.4rem;
+      color: #e5e7eb;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: #22c55e;
+      color: #bbf7d0;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .nav-blur {
+      backdrop-filter: blur(18px);
+      background: radial-gradient(circle at top left, rgba(21, 128, 61, 0.35), rgba(15, 23, 42, 0.98));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .input-modern {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 0.65rem 0.85rem;
+      color: #e5e7eb;
+      outline: none;
+      width: 100%;
+      font-size: 0.9rem;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+
+    .input-modern:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.55);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .tag-pill {
+      border-radius: 9999px;
+      padding: 0.18rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .scroll-smooth {
+      scroll-behavior: smooth;
+    }
+
+    /* Toast */
+    .toast {
+      min-width: 260px;
+      max-width: 360px;
+      border-radius: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.85rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+      animation: slideIn 0.16s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(10px) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.2s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateX(6px) translateY(4px);
+      }
+    }
+
+    /* Loading spinner */
+    .spinner {
+      border-radius: 9999px;
+      border-width: 2px;
+      border-style: solid;
+      border-color: rgba(148, 163, 184, 0.5);
+      border-top-color: #22c55e;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Crop card */
+    .crop-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      border-radius: 1.05rem;
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.12), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    .crop-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(74, 222, 128, 0.9);
+      box-shadow: 0 18px 45px rgba(22, 163, 74, 0.55);
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.18), rgba(15, 23, 42, 0.98));
+    }
+
+    /* Responsive navigation */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-nav {
+        display: none !important;
+      }
+    }
+
+    /* Custom scrollbar for cards area */
+    .thin-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .thin-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .thin-scroll::-webkit-scrollbar-thumb {
+      background: rgba(75, 85, 99, 0.9);
+      border-radius: 999px;
+    }
+  </style>
 </head>
-<body>
+<body class="scroll-smooth">
+  <div id="app-root" class="min-h-screen flex flex-col"></div>
 
-<h1>🌾 FarmPulse</h1>
+  <script>
+    // -----------------------
+    // Data & Auth Management
+    // -----------------------
+    const STORAGE_KEYS = {
+      USERS: "farmpulse_users_v1",
+      SESSION: "farmpulse_session_v1",
+      CROPS: "farmpulse_crops_v1",
+      LANGUAGE: "farmpulse_language_v1",
+    };
 
-<!-- LOGIN -->
-<h2>Login</h2>
-<input id="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-<button onclick="login()">Login</button>
+    const VILLAGES = [
+      "Bhimavaram", "Gollalakoderu", "Garagaparru", "Saggapadu", "Kesavaram",
+      "Veeravasaram", "Rayalam", "Taderu", "Chinamiram", "Pedamiram",
+      "Palakoderu", "Undi", "Kalla", "Mogallu", "Vempa", "Dirusumarru",
+      "Juvvalapalem", "Sivaramapuram", "Annavaram", "Kakaraparru", "Kalipatnam",
+      "Yelamanchili", "Penumantra", "Bhimadole"
+    ];
 
-<hr>
+    // ---------- Translation ----------
+    const TRANSLATIONS = {
+      en: {
+        brand: "FarmPulse",
+        tagline: "Digital Crop Marketplace",
+        heroTitle: "Connect Farmers and Buyers with Real Crop Data.",
+        heroSubtitle: "FarmPulse helps farmers showcase real-time crop availability while buyers discover authentic produce directly from trusted villages.",
+        getStartedFarmer: "I'm a Farmer",
+        getStartedBuyer: "I'm a Buyer",
+        browseCrops: "Browse Crops",
+        login: "Login",
+        logout: "Logout",
+        signup: "Sign up",
+        farmerLogin: "Farmer Login",
+        farmerSignup: "Farmer Sign up",
+        userLogin: "Buyer Login",
+        userSignup: "Buyer Sign up",
+        email: "Email",
+        password: "Password",
+        name: "Name",
+        phone: "Phone Number",
+        village: "Village",
+        roleFarmer: "Farmer",
+        roleUser: "Buyer",
+        confirmPassword: "Confirm Password",
+        alreadyAccount: "Already have an account?",
+        noAccount: "Don't have an account?",
+        or: "or",
+        dashboard: "Dashboard",
+        myCrops: "My Crops",
+        addCrop: "Add New Crop",
+        cropName: "Crop Name",
+        quantity: "Quantity",
+        pricePerUnit: "Price per Unit (₹)",
+        quality: "Quality Grade",
+        description: "Description / Notes",
+        submit: "Submit",
+        cancel: "Cancel",
+        welcomeBack: "Welcome back,",
+        allCrops: "Marketplace",
+        filters: "Filters",
+        searchPlaceholder: "Search crop or village…",
+        filterVillage: "Village",
+        filterQuality: "Quality",
+        all: "All",
+        noCrops: "No crops available yet.",
+        contactFarmer: "Contact Farmer",
+        farmerName: "Farmer",
+        farmerPhone: "Phone",
+        farmerVillage: "Village",
+        trueVillageHint: "Crops are accepted only from approved villages.",
+        invalidVillage: "Selected village is not in the approved list.",
+        signupSuccess: "Account created successfully. You can login now.",
+        loginSuccess: "Logged in successfully.",
+        logoutSuccess: "Logged out.",
+        invalidCredentials: "Invalid email or password.",
+        passwordMismatch: "Passwords do not match.",
+        emailExists: "Account already exists with this email for this role.",
+        requiredFields: "Please fill all required fields.",
+        cropAdded: "Crop added successfully.",
+        language: "Language",
+        farmerDashboard: "Farmer Dashboard",
+        buyerView: "Buyer Marketplace",
+        heroStatFarmers: "Registered Farmers",
+        heroStatCrops: "Active Crop Listings",
+        heroStatVillages: "Verified Villages",
+        loading: "Loading…",
+        delete: "Delete",
+        cropDeleted: "Crop deleted.",
+        priceLabel: "Price",
+        qtyLabel: "Quantity",
+        qualityLabel: "Quality",
+        villageLabel: "Village",
+        phoneHint: "You are sharing your phone with buyers. Ensure it is correct.",
+        sessionRestored: "Welcome back, your session was restored.",
+        role: "Role",
+        farmerCropsEmpty: "You have not added any crops yet.",
+        enterValidNumber: "Please enter valid numeric values for quantity and price.",
+        languageSaved: "Language updated.",
+      },
+      te: {
+        brand: "FarmPulse",
+        tagline: "డిజిటల్ పంట మార్కెట్",
+        heroTitle: "రైతులు మరియు కొనుగోలుదారులను నిజమైన పంట డేటాతో కలుపుతాము.",
+        heroSubtitle: "FarmPulse ద్వారా రైతులు తమ పంటల లభ్యతను చూపిస్తారు, కొనుగోలుదారులు నమ్మకమైన గ్రామాల నుండి నేరుగా పంటలను కనుగొంటారు.",
+        getStartedFarmer: "నేను రైతిని",
+        getStartedBuyer: "నేను కొనుగోలుదారుని",
+        browseCrops: "పంటలు చూడండి",
+        login: "లాగిన్",
+        logout: "లాగ్ అవుట్",
+        signup: "సైన్ అప్",
+        farmerLogin: "రైతుల లాగిన్",
+        farmerSignup: "రైతుల నమోదు",
+        userLogin: "కొనుగోలుదారుల లాగిన్",
+        userSignup: "కొనుగోలుదారుల నమోదు",
+        email: "ఇమెయిల్",
+        password: "పాస్‌వర్డ్",
+        name: "పేరు",
+        phone: "ఫోన్ నంబర్",
+        village: "గ్రామం",
+        roleFarmer: "రైతు",
+        roleUser: "కొనుగోలుదారు",
+        confirmPassword: "పాస్‌వర్డ్ నిర్ధారించండి",
+        alreadyAccount: "ఇప్పటికే అకౌంట్ ఉందా?",
+        noAccount: "అకౌంట్ లేనట్లయితే?",
+        or: "లేదా",
+        dashboard: "డాష్‌బోర్డ్",
+        myCrops: "నా పంటలు",
+        addCrop: "కొత్త పంట జోడించండి",
+        cropName: "పంట పేరు",
+        quantity: "ఎక్కువ (Qty)",
+        pricePerUnit: "యూనిట్ ధర (₹)",
+        quality: "నాణ్యత",
+        description: "వివరణ / గమనికలు",
+        submit: "సేవ్",
+        cancel: "రద్దు",
+        welcomeBack: "మళ్లీ స్వాగతం,",
+        allCrops: "మార్కెట్",
+        filters: "ఫిల్టర్‌లు",
+        searchPlaceholder: "పంట లేదా గ్రామం కోసం వెతకండి…",
+        filterVillage: "గ్రామం",
+        filterQuality: "నాణ్యత",
+        all: "అన్నీ",
+        noCrops: "ఇంకా పంటలు లేవు.",
+        contactFarmer: "రైతును సంప్రదించండి",
+        farmerName: "రైతు",
+        farmerPhone: "ఫోన్",
+        farmerVillage: "గ్రామం",
+        trueVillageHint: "అనుమతించిన గ్రామాల నుండి వచ్చిన పంటలనే అంగీకరిస్తాం.",
+        invalidVillage: "ఎంచుకున్న గ్రామం అనుమతించిన జాబితాలో లేదు.",
+        signupSuccess: "అకౌంట్ సక్సెస్‌ఫుల్ గా క్రియేట్ అయ్యింది. ఇప్పుడు లాగిన్ అవ్వండి.",
+        loginSuccess: "సక్సెస్‌ఫుల్ గా లాగిన్ అయ్యారు.",
+        logoutSuccess: "లాగ్ అవుట్ అయ్యారు.",
+        invalidCredentials: "తప్పు ఇమెయిల్ లేదా పాస్‌వర్డ్.",
+        passwordMismatch: "పాస్‌వర్డ్‌లు సరిపోలడం లేదు.",
+        emailExists: "ఈ ఇమెయిల్ మరియు రోల్‌కు అకౌంట్ ఇప్పటికే ఉంది.",
+        requiredFields: "దయచేసి అన్ని అవసరమైన ఫీల్డ్‌లు నింపండి.",
+        cropAdded: "పంట సక్సెస్‌ఫుల్ గా జోడించబడింది.",
+        language: "భాష",
+        farmerDashboard: "రైతుల డాష్‌బోర్డ్",
+        buyerView: "కొనుగోలుదారుల మార్కెట్",
+        heroStatFarmers: "నమోదైన రైతులు",
+        heroStatCrops: "యాక్టివ్ పంటలు",
+        heroStatVillages: "వెరిఫై చేసిన గ్రామాలు",
+        loading: "లోడవుతోంది…",
+        delete: "డిలీట్",
+        cropDeleted: "పంట డిలీట్ అయింది.",
+        priceLabel: "ధర",
+        qtyLabel: "ఎక్కువ",
+        qualityLabel: "నాణ్యత",
+        villageLabel: "గ్రామం",
+        phoneHint: "మీ ఫోన్ నంబర్ కొనుగోలుదారులతో పంచుకుంటారు. సరైనదిగా ఉందని తనిఖీ చేయండి.",
+        sessionRestored: "మళ్లీ స్వాగతం, మీ సెషన్ రీ స్టోర్ అయింది.",
+        role: "పాత్ర",
+        farmerCropsEmpty: "మీరు ఇంకా ఏ పంటలు జోడించలేదు.",
+        enterValidNumber: "ఎక్కువ మరియు ధర కోసం సరైన సంఖ్యలను నమోదు చేయండి.",
+        languageSaved: "భాష మార్చబడింది.",
+      },
+      hi: {
+        brand: "FarmPulse",
+        tagline: "डिजिटल फ़सली बाज़ार",
+        heroTitle: "किसानों और ख़रीदारों को असली फ़सल डेटा से जोड़ें।",
+        heroSubtitle: "FarmPulse किसानों को रीयल-टाइम फ़सल उपलब्धता दिखाने में मदद करता है और खरीदारों को भरोसेमंद गाँवों से सीधे फ़सलें खोजने देता है।",
+        getStartedFarmer: "मैं किसान हूँ",
+        getStartedBuyer: "मैं खरीदार हूँ",
+        browseCrops: "फ़सलें देखें",
+        login: "लॉगिन",
+        logout: "लॉगआउट",
+        signup: "साइन अप",
+        farmerLogin: "किसान लॉगिन",
+        farmerSignup: "किसान साइन अप",
+        userLogin: "खरीदार लॉगिन",
+        userSignup: "खरीदार साइन अप",
+        email: "ईमेल",
+        password: "पासवर्ड",
+        name: "नाम",
+        phone: "फ़ोन नंबर",
+        village: "गाँव",
+        roleFarmer: "किसान",
+        roleUser: "खरीदार",
+        confirmPassword: "पासवर्ड की पुष्टि करें",
+        alreadyAccount: "पहले से अकाउंट है?",
+        noAccount: "अकाउंट नहीं है?",
+        or: "या",
+        dashboard: "डैशबोर्ड",
+        myCrops: "मेरी फ़सलें",
+        addCrop: "नई फ़सल जोड़ें",
+        cropName: "फ़सल का नाम",
+        quantity: "मात्रा",
+        pricePerUnit: "प्रति इकाई कीमत (₹)",
+        quality: "क्वालिटी",
+        description: "विवरण / नोट्स",
+        submit: "सेव",
+        cancel: "रद्द",
+        welcomeBack: "वापस स्वागत है,",
+        allCrops: "मार्केटप्लेस",
+        filters: "फ़िल्टर",
+        searchPlaceholder: "फ़सल या गाँव खोजें…",
+        filterVillage: "गाँव",
+        filterQuality: "क्वालिटी",
+        all: "सभी",
+        noCrops: "अभी कोई फ़सल उपलब्ध नहीं है।",
+        contactFarmer: "किसान से संपर्क करें",
+        farmerName: "किसान",
+        farmerPhone: "फ़ोन",
+        farmerVillage: "गाँव",
+        trueVillageHint: "केवल स्वीकृत गाँवों से आई फ़सलों को स्वीकार किया जाएगा।",
+        invalidVillage: "चुना हुआ गाँव स्वीकृत सूची में नहीं है।",
+        signupSuccess: "अकाउंट सफलतापूर्वक बना। अब आप लॉगिन कर सकते हैं।",
+        loginSuccess: "सफलतापूर्वक लॉगिन हो गया।",
+        logoutSuccess: "लॉगआउट हो गया।",
+        invalidCredentials: "गलत ईमेल या पासवर्ड।",
+        passwordMismatch: "पासवर्ड मेल नहीं खाते।",
+        emailExists: "इस ईमेल और भूमिका के लिए अकाउंट पहले से मौजूद है।",
+        requiredFields: "कृपया सभी ज़रूरी फ़ील्ड भरें।",
+        cropAdded: "फ़सल सफलतापूर्वक जोड़ी गई।",
+        language: "भाषा",
+        farmerDashboard: "किसान डैशबोर्ड",
+        buyerView: "खरीदार मार्केट",
+        heroStatFarmers: "रजिस्टर्ड किसान",
+        heroStatCrops: "सक्रिय फ़सलें",
+        heroStatVillages: "वेरिफाइड गाँव",
+        loading: "लोड हो रहा है…",
+        delete: "हटाएँ",
+        cropDeleted: "फ़सल हटाई गई।",
+        priceLabel: "कीमत",
+        qtyLabel: "मात्रा",
+        qualityLabel: "क्वालिटी",
+        villageLabel: "गाँव",
+        phoneHint: "आप अपना फ़ोन नंबर खरीदारों के साथ शेयर कर रहे हैं। कृपया इसे सही रखें।",
+        sessionRestored: "वापस स्वागत है, आपका सेशन बहाल हो गया।",
+        role: "भूमिका",
+        farmerCropsEmpty: "आपने अभी तक कोई फ़सल नहीं जोड़ी।",
+        enterValidNumber: "कृपया मात्रा और कीमत के लिए सही संख्या डालें।",
+        languageSaved: "भाषा अपडेट हो गई।",
+      },
+      ta: {
+        brand: "FarmPulse",
+        tagline: "டிஜிட்டல் பயிர் சந்தை",
+        heroTitle: "உண்மையான பயிர் தரவுடன் விவசாயிகள் & வாங்குபவர்களை இணைக்கவும்.",
+        heroSubtitle: "FarmPulse மூலம் விவசாயிகள் தங்களின் பயிர் கிடைப்பை காட்டலாம்; வாங்குபவர்கள் நம்பகமான கிராமங்களில் இருந்து நேரடியாக பயிர்களைத் தேர்ந்தெடுக்கலாம்.",
+        getStartedFarmer: "நான் விவசாயி",
+        getStartedBuyer: "நான் வாங்குபவர்",
+        browseCrops: "பயிர்கள் பார்க்க",
+        login: "லாகின்",
+        logout: "லாக் அவுட்",
+        signup: "சைன் அப்",
+        farmerLogin: "விவசாயி லாகின்",
+        farmerSignup: "விவசாயி பதிவு",
+        userLogin: "வாங்குபவர் லாகின்",
+        userSignup: "வாங்குபவர் பதிவு",
+        email: "ஈமெயில்",
+        password: "கடவுச்சொல்",
+        name: "பெயர்",
+        phone: "தொலைபேசி எண்",
+        village: "கிராமம்",
+        roleFarmer: "விவசாயி",
+        roleUser: "வாங்குபவர்",
+        confirmPassword: "கடவுச்சொல் உறுதிசெய்",
+        alreadyAccount: "ஏற்கனவே கணக்கு இருக்கிறதா?",
+        noAccount: "கணக்கு இல்லையா?",
+        or: "அல்லது",
+        dashboard: "டாஷ்போர்டு",
+        myCrops: "என் பயிர்கள்",
+        addCrop: "புதிய பயிர் சேர்க்க",
+        cropName: "பயிர் பெயர்",
+        quantity: "அளவு",
+        pricePerUnit: "அலகு விலை (₹)",
+        quality: "தரம்",
+        description: "விவரம் / குறிப்புகள்",
+        submit: "சேமிக்க",
+        cancel: "ரத்து",
+        welcomeBack: "மீண்டும் வரவேற்கிறோம்,",
+        allCrops: "சந்தை",
+        filters: "வடிகட்டி",
+        searchPlaceholder: "பயிர் அல்லது கிராமம் தேட…",
+        filterVillage: "கிராமம்",
+        filterQuality: "தரம்",
+        all: "அனைத்தும்",
+        noCrops: "இன்னும் பயிர்கள் இல்லை.",
+        contactFarmer: "விவசாயியை தொடர்பு கொள்ள",
+        farmerName: "விவசாயி",
+        farmerPhone: "தொலைபேசி",
+        farmerVillage: "கிராமம்",
+        trueVillageHint: "ஒப்புதல் பெற்ற கிராமங்களிலிருந்து வரும் பயிர்கள்தான் ஏற்றுக்கொள்ளப்படும்.",
+        invalidVillage: "தேர்ந்தெடுக்கப்பட்ட கிராமம் அங்கீகரிக்கப்பட்ட பட்டியலில் இல்லை.",
+        signupSuccess: "கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது. இப்போது லாகின் செய்யலாம்.",
+        loginSuccess: "வெற்றிகரமாக லாகின் செய்யப்பட்டது.",
+        logoutSuccess: "லாக் அவுட் செய்யப்பட்டது.",
+        invalidCredentials: "தவறான ஈமெயில் அல்லது கடவுச்சொல்.",
+        passwordMismatch: "கடவுச்சொற்கள் பொருந்தவில்லை.",
+        emailExists: "இந்த ஈமெயிலும் ரோலுக்கும் ஏற்கனவே கணக்கு உள்ளது.",
+        requiredFields: "எல்லா அவசியமான புலங்களையும் நிரப்பவும்.",
+        cropAdded: "பயிர் வெற்றிகரமாக சேர்க்கப்பட்டது.",
+        language: "மொழி",
+        farmerDashboard: "விவசாயி டாஷ்போர்டு",
+        buyerView: "வாங்குபவர் சந்தை",
+        heroStatFarmers: "பதிவான விவசாயிகள்",
+        heroStatCrops: "செயலில் உள்ள பயிர்கள்",
+        heroStatVillages: "சரிபார்க்கப்பட்ட கிராமங்கள்",
+        loading: "ஏற்றப்படுகிறது…",
+        delete: "நீக்கு",
+        cropDeleted: "பயிர் நீக்கப்பட்டது.",
+        priceLabel: "விலை",
+        qtyLabel: "அளவு",
+        qualityLabel: "தரம்",
+        villageLabel: "கிராமம்",
+        phoneHint: "நீங்கள் உங்கள் தொலைபேசி எண்ணை வாங்குபவர்களுடன் பகிர்கிறீர்கள். சரியாக உள்ளதா என்பதை உறுதிப்படுத்தவும்.",
+        sessionRestored: "மீண்டும் வரவேற்கிறோம், உங்கள் செஷன் மீட்கப்பட்டது.",
+        role: "பங்கு",
+        farmerCropsEmpty: "நீங்கள் இன்னும் எந்த பயிரையும் சேர்க்கவில்லை.",
+        enterValidNumber: "அளவு மற்றும் விலைக்கு சரியான எண்களை உள்ளிடவும்.",
+        languageSaved: "மொழி மாற்றப்பட்டது.",
+      },
+      kn: {
+        brand: "FarmPulse",
+        tagline: "ಡಿಜೆಟಲ್ ಬೆಳೆ ಮಾರುಕಟ್ಟೆ",
+        heroTitle: "ನಿಜವಾದ ಬೆಳೆ ಮಾಹಿತಿಯಿಂದ ರೈತರನ್ನು ಮತ್ತು ಖರೀದಿದಾರರನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+        heroSubtitle: "FarmPulse ರೈತರಿಗೆ ತಮ್ಮ ಬೆಳೆ ಲಭ್ಯತೆಯನ್ನು ತೋರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಖರೀದಿದಾರರು ನಂಬಿಕೆ ಯೋಗ್ಯ ಹಳ್ಳಿಗಳಿಂದ ನೇರವಾಗಿ ಬೆಳೆಗಳನ್ನು ಹುಡುಕಬಹುದು.",
+        getStartedFarmer: "ನಾನು ರೈತನು",
+        getStartedBuyer: "ನಾನು ಖರೀದಿದಾರನು",
+        browseCrops: "ಬೇಳೆಗಳು ನೋಡಿ",
+        login: "ಲಾಗಿನ್",
+        logout: "ಲಾಗ್ ಔಟ್",
+        signup: "ಸೈನ್ ಅಪ್",
+        farmerLogin: "ರೈತ ಲಾಗಿನ್",
+        farmerSignup: "ರೈತ ನೋಂದಣಿ",
+        userLogin: "ಖರೀದಿದಾರ ಲಾಗಿನ್",
+        userSignup: "ಖರೀದಿದಾರ ನೋಂದಣಿ",
+        email: "ಇಮೇಲ್",
+        password: "ಪಾಸ್ವರ್ಡ್",
+        name: "ಹೆಸರು",
+        phone: "ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
+        village: "ಹಳ್ಳಿ",
+        roleFarmer: "ರೈತ",
+        roleUser: "ಖರೀದಿದಾರ",
+        confirmPassword: "ಪಾಸ್ವರ್ಡ್ ದೃಢಪಡಿಸಿ",
+        alreadyAccount: "ಈಗಾಗಲೇ ಖಾತೆಯಿದೆಯಾ?",
+        noAccount: "ಖಾತೆ ಇಲ್ಲವೇ?",
+        or: "ಅಥವಾ",
+        dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+        myCrops: "ನನ್ನ ಬೆಳೆಗಳು",
+        addCrop: "ಹೊಸ ಬೆಳೆ ಸೇರಿಸಿ",
+        cropName: "ಬೆಳೆ ಹೆಸರು",
+        quantity: "ಪ್ರಮಾಣ",
+        pricePerUnit: "ಪ್ರತಿ ಘಟಕ ಬೆಲೆ (₹)",
+        quality: "ಗುಣಮಟ್ಟ",
+        description: "ವಿವರಣೆ / ಟಿಪ್ಪಣಿಗಳು",
+        submit: "ಸೇವ್",
+        cancel: "ರದ್ದು",
+        welcomeBack: "ಮತ್ತೆ ಸ್ವಾಗತ,",
+        allCrops: "ಮಾರ್ಕೆಟ್",
+        filters: "ಫಿಲ್ಟರ್‌ಗಳು",
+        searchPlaceholder: "ಬೆಳೆ ಅಥವಾ ಹಳ್ಳಿ ಹುಡುಕಿ…",
+        filterVillage: "ಹಳ್ಳಿ",
+        filterQuality: "ಗುಣಮಟ್ಟ",
+        all: "ಎಲ್ಲಾ",
+        noCrops: "ಇನ್ನೂ ಯಾವುದೇ ಬೆಳೆ ಲಭ್ಯವಿಲ್ಲ.",
+        contactFarmer: "ರೈತನನ್ನು ಸಂಪರ್ಕಿಸಿ",
+        farmerName: "ರೈತ",
+        farmerPhone: "ದೂರವಾಣಿ",
+        farmerVillage: "ಹಳ್ಳಿ",
+        trueVillageHint: "ಮಂಜೂರಾದ ಹಳ್ಳಿಗಳಿಂದ ಬಂದ ಬೆಳೆಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ.",
+        invalidVillage: "ಆಯ್ಕೆ ಮಾಡಲಾದ ಹಳ್ಳಿ ಮಂಜೂರಾದ ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲ.",
+        signupSuccess: "ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಯಿತು. ಈಗ ಲಾಗಿನ್ ಮಾಡಬಹುದು.",
+        loginSuccess: "ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಿದೆ.",
+        logoutSuccess: "ಲಾಗ್ ಔಟ್ ಆಗಿದೆ.",
+        invalidCredentials: "ತಪ್ಪಾದ ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್ವರ್ಡ್.",
+        passwordMismatch: "ಪಾಸ್ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.",
+        emailExists: "ಈ ಇಮೇಲ್ ಮತ್ತು ಪಾತ್ರಕ್ಕೆ ಈಗಾಗಲೇ ಖಾತೆ ಇದೆ.",
+        requiredFields: "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಅಗತ್ಯ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ.",
+        cropAdded: "ಬೆಳೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ.",
+        language: "ಭಾಷೆ",
+        farmerDashboard: "ರೈತ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+        buyerView: "ಖರೀದಿದಾರ ಮಾರ್ಕೆಟ್",
+        heroStatFarmers: "ನೋಂದಾಯಿತ ರೈತರು",
+        heroStatCrops: "ಸಕ್ರಿಯ ಬೆಳೆ ಜಾಹೀರಾತುಗಳು",
+        heroStatVillages: "ಪರಿಶೀಲಿತ ಹಳ್ಳಿಗಳು",
+        loading: "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
+        delete: "ಅಳಿಸು",
+        cropDeleted: "ಬೆಳೆ ಅಳಿಸಲಾಯಿತು.",
+        priceLabel: "ಬೆಲೆ",
+        qtyLabel: "ಪ್ರಮಾಣ",
+        qualityLabel: "ಗುಣಮಟ್ಟ",
+        villageLabel: "ಹಳ್ಳಿ",
+        phoneHint: "ನೀವು ನಿಮ್ಮ ದೂರವಾಣಿ ಸಂಖ್ಯೆಯನ್ನು ಖರೀದಿದಾರರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳುತ್ತಿದ್ದೀರಿ. ಇದು ಸರಿಯೇ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+        sessionRestored: "ಮತ್ತೆ ಸ್ವಾಗತ, ನಿಮ್ಮ ಸೆಷನ್ ಪುನಃಸ್ಥಾಪಿಸಲಾಗಿದೆ.",
+        role: "ಪಾತ್ರ",
+        farmerCropsEmpty: "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಬೆಳೆ ಸೇರಿಸಿಲ್ಲ.",
+        enterValidNumber: "ಪ್ರಮಾಣ ಮತ್ತು ಬೆಲೆಗೆ ಸರಿಯಾದ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
+        languageSaved: "ಭಾಷೆ ನವೀಕರಿಸಲಾಗಿದೆ.",
+      },
+      ml: {
+        brand: "FarmPulse",
+        tagline: "ഡിജിറ്റൽ വിള വിപണി",
+        heroTitle: "യഥാർത്ഥ വിള ഡാറ്റയിലൂടെ കർഷകരെയും വാങ്ങുന്നവരെയും ബന്ധിപ്പിക്കുക.",
+        heroSubtitle: "FarmPulse വഴി കർഷകർ തങ്ങളുടെ വിള ലഭ്യത കാണിക്കാം; വാങ്ങുന്നവർ വിശ്വാസമുള്ള ഗ്രാമങ്ങളിൽ നിന്ന് നേരിട്ട് വിളകൾ കണ്ടെത്താം.",
+        getStartedFarmer: "ഞാൻ കർഷകനാണ്",
+        getStartedBuyer: "ഞാൻ വാങ്ങുന്നവനാണ്",
+        browseCrops: "വിളകൾ കാണുക",
+        login: "ലോഗിൻ",
+        logout: "ലോഗൗട്ട്",
+        signup: "സൈൻ അപ്പ്",
+        farmerLogin: "കർഷക ലോഗിൻ",
+        farmerSignup: "കർഷക രജിസ്ട്രേഷൻ",
+        userLogin: "വാങ്ങുന്നവൻ ലോഗിൻ",
+        userSignup: "വാങ്ങുന്നവൻ രജിസ്ട്രേഷൻ",
+        email: "ഇമെയിൽ",
+        password: "പാസ്‌വേഡ്",
+        name: "പേര്",
+        phone: "ഫോൺ നമ്പർ",
+        village: "ഗ്രാം",
+        roleFarmer: "കർഷകൻ",
+        roleUser: "വാങ്ങുന്നവൻ",
+        confirmPassword: "പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക",
+        alreadyAccount: "ഇതിനകം അക്കൗണ്ടുണ്ടോ?",
+        noAccount: "അക്കൗണ്ടില്ലേ?",
+        or: "അല്ലെങ്കിൽ",
+        dashboard: "ഡാഷ്ബോർഡ്",
+        myCrops: "എന്റെ വിളകൾ",
+        addCrop: "പുതിയ വിള ചേർക്കുക",
+        cropName: "വിളയുടെ പേര്",
+        quantity: "അളവ്",
+        pricePerUnit: "യൂണിറ്റ് വില (₹)",
+        quality: "ഗുണനിലവാരം",
+        description: "വിവരണം / കുറിപ്പുകൾ",
+        submit: "സേവ്",
+        cancel: "റദ്ദാക്കുക",
+        welcomeBack: "വീണ്ടും സ്വാഗതം,",
+        allCrops: "മാർക്കറ്റ്",
+        filters: "ഫിൽറ്ററുകൾ",
+        searchPlaceholder: "വിള അല്ലെങ്കിൽ ഗ്രാമം തിരയുക…",
+        filterVillage: "ഗ്രാം",
+        filterQuality: "ഗുണം",
+        all: "എല്ലാം",
+        noCrops: "ഇപ്പോൾ വിളകൾ ഇല്ല.",
+        contactFarmer: "കർഷകനെ ബന്ധപ്പെടുക",
+        farmerName: "കർഷകൻ",
+        farmerPhone: "ഫോൺ",
+        farmerVillage: "ഗ്രാം",
+        trueVillageHint: "അംഗീകരിച്ച ഗ്രാമങ്ങളിൽ നിന്നുള്ള വിളകളെ മാത്രമാണ് സ്വീകരിക്കുന്നത്.",
+        invalidVillage: "തിരഞ്ഞെടുത്ത ഗ്രാമം അംഗീകരിച്ച പട്ടികയിൽ ഇല്ല.",
+        signupSuccess: "അക്കൗണ്ട് വിജയകരമായി സൃഷ്ടിച്ചു. ഇപ്പോൾ ലോഗിൻ ചെയ്യാം.",
+        loginSuccess: "വിജയകരമായി ലോഗിൻ ചെയ്തു.",
+        logoutSuccess: "ലോഗൗട്ട് ചെയ്തു.",
+        invalidCredentials: "തെറ്റായ ഇമെയിൽ അല്ലെങ്കിൽ പാസ്‌വേഡ്.",
+        passwordMismatch: "പാസ്‌വേഡുകൾ ഒത്തുപോകുന്നില്ല.",
+        emailExists: "ഈ ഇമെയിലും റോളിനും അക്കൗണ്ട് ഇതിനകം ഉണ്ട്.",
+        requiredFields: "ദയവായി എല്ലാ ആവശ്യമായ ഫീൽഡുകളും പൂരിപ്പിക്കുക.",
+        cropAdded: "വിള വിജയകരമായി ചേർത്തു.",
+        language: "ഭാഷ",
+        farmerDashboard: "കർഷക ഡാഷ്ബോർഡ്",
+        buyerView: "വാങ്ങുന്നവരുടെ മാർക്കറ്റ്",
+        heroStatFarmers: "രജിസ്റ്റർ ചെയ്ത കർഷകർ",
+        heroStatCrops: "സജീവ വിള ലിസ്റ്റുകൾ",
+        heroStatVillages: "സ്ഥിരീകരിച്ച ഗ്രാമങ്ങൾ",
+        loading: "ലോഡിംഗ്…",
+        delete: "ഇല്ലാതാക്കുക",
+        cropDeleted: "വിള ഇല്ലാതാക്കി.",
+        priceLabel: "വില",
+        qtyLabel: "അളവ്",
+        qualityLabel: "ഗുണം",
+        villageLabel: "ഗ്രാം",
+        phoneHint: "നിങ്ങളുടെ ഫോൺ നമ്പർ വാങ്ങുന്നവരുമായി പങ്കിട്ടിരിക്കുന്നു. ശരിയാണെന്ന് ഉറപ്പാക്കുക.",
+        sessionRestored: "വീണ്ടും സ്വാഗതം, നിങ്ങളുടെ സെഷൻ പുനഃസ്ഥാപിച്ചു.",
+        role: "പങ്ക്",
+        farmerCropsEmpty: "നിങ്ങൾ ഇതുവരെ വിളകൾ ചേർത്തിട്ടില്ല.",
+        enterValidNumber: "അളവും വിലയും ശരിയായ സംഖ്യകൾ ആയി നൽകുക.",
+        languageSaved: "ഭാഷ അപ്ഡേറ്റ് ചെയ്തു.",
+      },
+    };
 
-<!-- ADD CROP -->
-<h2>Add Crop</h2>
-<input id="name" placeholder="Crop Name"><br><br>
-<input id="price" placeholder="Price"><br><br>
-<input id="quantity" placeholder="Quantity"><br><br>
-<input id="village" placeholder="Village"><br><br>
-<input id="contact" placeholder="Contact"><br><br>
-<button onclick="addCrop()">Add Crop</button>
+    // Utility: get translation
+    const getLang = () => localStorage.getItem(STORAGE_KEYS.LANGUAGE) || "en";
+    const t = (key) => {
+      const lang = getLang();
+      const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+      return dict[key] || TRANSLATIONS.en[key] || key;
+    };
 
-<hr>
+    // Storage helpers
+    const loadJSON = (key, fallback) => {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch {
+        return fallback;
+      }
+    };
 
-<!-- CROPS LIST -->
-<h2>All Crops</h2>
-<button onclick="loadCrops()">Refresh</button>
-<ul id="crops"></ul>
+    const saveJSON = (key, value) => {
+      localStorage.setItem(key, JSON.stringify(value));
+    };
 
-<script>
+    const getUsers = () => loadJSON(STORAGE_KEYS.USERS, []);
+    const setUsers = (users) => saveJSON(STORAGE_KEYS.USERS, users);
 
-const API_URL = "http://localhost:5000";
+    const getSession = () => {
+      try {
+        const raw = sessionStorage.getItem(STORAGE_KEYS.SESSION);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    };
+    const setSession = (session) => {
+      if (!session) {
+        sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+      } else {
+        sessionStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+      }
+    };
 
-// 🔐 LOGIN
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    const getCrops = () => loadJSON(STORAGE_KEYS.CROPS, []);
+    const setCrops = (crops) => saveJSON(STORAGE_KEYS.CROPS, crops);
 
-  const res = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ email, password })
-  });
+    const generateId = () => "id_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-  const data = await res.json();
+    // -----------------------
+    // Toast Notification
+    // -----------------------
+    const showToast = (message, type = "info") => {
+      let container = document.getElementById("toast-container");
+      if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        container.className = "fixed z-50 bottom-4 right-4 flex flex-col gap-2";
+        document.body.appendChild(container);
+      }
+      const el = document.createElement("div");
+      let colors = "bg-slate-900 border-slate-500 text-slate-100";
+      if (type === "success") colors = "bg-emerald-900/90 border-emerald-500 text-emerald-50";
+      if (type === "error") colors = "bg-red-900/90 border-red-500 text-red-50";
+      if (type === "warning") colors = "bg-amber-900/90 border-amber-500 text-amber-50";
+      el.className = `toast border ${colors} flex items-start gap-2`;
+      const icon = document.createElement("span");
+      icon.innerHTML = type === "error"
+        ? '<i class="fa-solid fa-circle-xmark mt-0.5 text-red-300"></i>'
+        : type === "success"
+          ? '<i class="fa-solid fa-circle-check mt-0.5 text-emerald-300"></i>'
+          : '<i class="fa-solid fa-circle-info mt-0.5 text-sky-300"></i>';
+      const text = document.createElement("div");
+      text.textContent = message;
+      const close = document.createElement("button");
+      close.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      close.className = "ml-2 text-xs text-slate-200/70 hover:text-white";
+      close.onclick = () => {
+        el.classList.add("fade-out");
+        setTimeout(() => el.remove(), 180);
+      };
+      el.appendChild(icon);
+      el.appendChild(text);
+      el.appendChild(close);
+      container.appendChild(el);
+      setTimeout(() => {
+        if (el.parentNode) {
+          el.classList.add("fade-out");
+          setTimeout(() => el.remove(), 180);
+        }
+      }, 4200);
+    };
 
-  if (res.ok) {
-    alert("Login Success");
-    localStorage.setItem("token", data.token);
-  } else {
-    alert("Login Failed");
-  }
-}
+    // -----------------------
+    // App State & Rendering
+    // -----------------------
+    const AppState = {
+      currentRoute: "home", // home | login_farmer | login_user | signup_farmer | signup_user | farmer_dashboard | marketplace
+      auth: getSession(),
+      loading: false,
+      selectedLanguage: getLang(),
+      filters: {
+        search: "",
+        village: "all",
+        quality: "all",
+      },
+      initDone: false,
+    };
 
-// 🌾 ADD CROP
-async function addCrop() {
-  const name = document.getElementById("name").value;
-  const price = document.getElementById("price").value;
-  const quantity = document.getElementById("quantity").value;
-  const village = document.getElementById("village").value;
-  const contact = document.getElementById("contact").value;
+    const setRoute = (route) => {
+      AppState.currentRoute = route;
+      renderApp();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
-  const token = localStorage.getItem("token");
+    const setLanguage = (lang) => {
+      AppState.selectedLanguage = lang;
+      localStorage.setItem(STORAGE_KEYS.LANGUAGE, lang);
+      renderApp();
+      showToast(t("languageSaved"), "success");
+    };
 
-  const res = await fetch(`${API_URL}/api/crops`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": token
-    },
-    body: JSON.stringify({ name, price, quantity, village, contact })
-  });
+    const updateAuth = (session) => {
+      AppState.auth = session;
+      setSession(session);
+      renderApp();
+    };
 
-  if (res.ok) {
-    alert("Crop Added");
-    loadCrops();
-  } else {
-    alert("Error adding crop");
-  }
-}
+    const setLoading = (val) => {
+      AppState.loading = val;
+      const btns = document.querySelectorAll("[data-loading-btn]");
+      btns.forEach((btn) => {
+        if (val) {
+          btn.setAttribute("disabled", "true");
+          btn.classList.add("opacity-70", "cursor-wait");
+        } else {
+          btn.removeAttribute("disabled");
+          btn.classList.remove("opacity-70", "cursor-wait");
+        }
+      });
+    };
 
-// 📄 LOAD CROPS
-async function loadCrops() {
-  const res = await fetch(`${API_URL}/api/crops`);
-  const data = await res.json();
+    const isFarmer = () => AppState.auth && AppState.auth.role === "farmer";
 
-  const list = document.getElementById("crops");
-  list.innerHTML = "";
+    // -----------------------
+    // Auth Functions
+    // -----------------------
+    const signup = ({ role, name, email, phone, village, password, confirmPassword }) => {
+      if (!name || !email || !phone || !village || !password || !confirmPassword) {
+        showToast(t("requiredFields"), "warning");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showToast(t("passwordMismatch"), "error");
+        return;
+      }
+      const users = getUsers();
+      if (users.some((u) => u.email === email && u.role === role)) {
+        showToast(t("emailExists"), "error");
+        return;
+      }
+      const userId = generateId();
+      const newUser = { id: userId, role, name, email, phone, village, password };
+      users.push(newUser);
+      setUsers(users);
+      showToast(t("signupSuccess"), "success");
+      if (role === "farmer") setRoute("login_farmer");
+      else setRoute("login_user");
+    };
 
-  data.forEach(crop => {
-    const li = document.createElement("li");
-    li.innerText = `${crop.name} - ₹${crop.price} - ${crop.quantity}kg - ${crop.village}`;
-    list.appendChild(li);
-  });
-}
+    const login = ({ role, email, password }) => {
+      if (!email || !password) {
+        showToast(t("requiredFields"), "warning");
+        return;
+      }
+      const users = getUsers();
+      const user = users.find((u) => u.email === email && u.role === role && u.password === password);
+      if (!user) {
+        showToast(t("invalidCredentials"), "error");
+        return;
+      }
+      const session = {
+        id: user.id,
+        role: user.role,
+        name: user.name,
+        email: user.email,
+        village: user.village,
+        phone: user.phone,
+      };
+      updateAuth(session);
+      showToast(t("loginSuccess"), "success");
+      if (role === "farmer") setRoute("farmer_dashboard");
+      else setRoute("marketplace");
+    };
 
-// AUTO LOAD
-loadCrops();
+    const logout = () => {
+      updateAuth(null);
+      showToast(t("logoutSuccess"), "success");
+      setRoute("home");
+    };
 
-</script>
+    // -----------------------
+    // Crop Handling
+    // -----------------------
+    const addCrop = ({ name, quantity, price, quality, description, village }) => {
+      if (!name || !quantity || !price || !quality || !village) {
+        showToast(t("requiredFields"), "warning");
+        return false;
+      }
+      const qtyNum = Number(quantity);
+      const priceNum = Number(price);
+      if (Number.isNaN(qtyNum) || Number.isNaN(priceNum) || qtyNum <= 0 || priceNum <= 0) {
+        showToast(t("enterValidNumber"), "error");
+        return false;
+      }
+      if (!VILLAGES.includes(village)) {
+        showToast(t("invalidVillage"), "error");
+        return false;
+      }
+      const crops = getCrops();
+      const newCrop = {
+        id: generateId(),
+        farmerId: AppState.auth.id,
+        name,
+        quantity: qtyNum,
+        price: priceNum,
+        quality,
+        description,
+        village,
+        createdAt: Date.now(),
+      };
+      crops.push(newCrop);
+      setCrops(crops);
+      showToast(t("cropAdded"), "success");
+      renderApp();
+      return true;
+    };
 
+    const deleteCrop = (cropId) => {
+      const crops = getCrops();
+      const remaining = crops.filter((c) => c.id !== cropId || c.farmerId !== AppState.auth.id);
+      setCrops(remaining);
+      showToast(t("cropDeleted"), "success");
+      renderApp();
+    };
+
+    // -----------------------
+    // UI Components
+    // -----------------------
+    const renderNavbar = () => {
+      const auth = AppState.auth;
+      return `
+      <header class="sticky top-0 z-30 nav-blur">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-emerald-400 to-lime-400 flex items-center justify-center shadow-md shadow-emerald-500/50">
+              <i class="fa-solid fa-seedling text-slate-950 text-lg"></i>
+            </div>
+            <div class="flex flex-col leading-tight">
+              <span class="text-base sm:text-lg font-semibold tracking-tight text-emerald-100">${t("brand")}</span>
+              <span class="text-[0.65rem] sm:text-xs text-emerald-200/80 uppercase tracking-[0.18em]">${t("tagline")}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Language selector -->
+            <div class="hidden sm:flex items-center gap-1 mr-2 rounded-full border border-emerald-500/50 bg-slate-900/50 px-2.5 py-1">
+              <i class="fa-solid fa-language text-emerald-300 text-xs mr-1"></i>
+              <select id="language-select"
+                class="bg-transparent text-xs outline-none border-none focus:ring-0 text-emerald-50">
+                ${Object.keys(TRANSLATIONS).map((code) => {
+                  const map = {
+                    en: "English",
+                    te: "తెలుగు",
+                    hi: "हिन्दी",
+                    ta: "தமிழ்",
+                    kn: "ಕನ್ನಡ",
+                    ml: "മലയാളം",
+                  };
+                  return `<option value="${code}" ${AppState.selectedLanguage === code ? "selected" : ""}>${map[code]}</option>`;
+                }).join("")}
+              </select>
+            </div>
+
+            <div class="hidden md:flex nav-links items-center gap-4 text-sm">
+              <button data-nav="home" class="text-slate-200/80 hover:text-white transition">
+                ${t("home") || "Home"}
+              </button>
+              <button data-nav="marketplace" class="text-slate-200/80 hover:text-white transition">
+                ${t("allCrops")}
+              </button>
+              ${auth && auth.role === "farmer" ? `
+                <button data-nav="farmer_dashboard" class="text-slate-200/80 hover:text-white transition">
+                  ${t("farmerDashboard")}
+                </button>
+              ` : ""}
+            </div>
+
+            <div class="hidden md:flex items-center gap-2">
+              ${auth ? `
+                <div class="flex items-center gap-2 mr-1 text-xs text-emerald-100/90 px-3 py-1 rounded-full border border-emerald-500/60 bg-slate-950/70">
+                  <i class="fa-solid fa-user text-emerald-300 mr-1"></i>
+                  <span class="max-w-[140px] truncate">${auth.name}</span>
+                  <span class="mx-1 text-slate-500">·</span>
+                  <span class="uppercase tracking-wide text-[0.65rem]">${auth.role === "farmer" ? t("roleFarmer") : t("roleUser")}</span>
+                </div>
+                <button data-action="logout" class="btn-outline text-xs px-3 py-1.5 flex items-center gap-1">
+                  <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i><span>${t("logout")}</span>
+                </button>
+              ` : `
+                <button data-nav="login_user" class="btn-outline text-xs px-3 py-1.5">
+                  ${t("login")}
+                </button>
+                <button data-nav="signup_farmer" class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1">
+                  <i class="fa-solid fa-user-plus text-xs"></i><span>${t("signup")}</span>
+                </button>
+              `}
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-toggle" class="md:hidden h-9 w-9 rounded-full border border-emerald-500/60 flex items-center justify-center text-emerald-200">
+              <i class="fa-solid fa-bars text-sm"></i>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Mobile menu -->
+        <div id="mobile-nav" class="mobile-nav hidden border-t border-emerald-500/40 bg-slate-950/95">
+          <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-3 text-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1 text-xs">
+                <i class="fa-solid fa-language text-emerald-300 mr-1"></i>
+                <span class="text-slate-300 mr-1">${t("language")}:</span>
+                <select id="language-select-mobile"
+                  class="bg-slate-900/80 border border-emerald-500/40 rounded-full px-2 py-0.5 text-[0.7rem] outline-none focus:ring-1 focus:ring-emerald-400 text-emerald-50">
+                  ${Object.keys(TRANSLATIONS).map((code) => {
+                    const map = {
+                      en: "English",
+                      te: "తెలుగు",
+                      hi: "हिन्दी",
+                      ta: "தமிழ்",
+                      kn: "ಕನ್ನಡ",
+                      ml: "മലയാളം",
+                    };
+                    return `<option value="${code}" ${AppState.selectedLanguage === code ? "selected" : ""}>${map[code]}</option>`;
+                  }).join("")}
+                </select>
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <button data-nav="home" class="flex items-center justify-between px-2 py-1 rounded-lg text-slate-200 hover:bg-slate-800/70">
+                <span>${t("home") || "Home"}</span>
+                <i class="fa-solid fa-house text-xs text-emerald-300"></i>
+              </button>
+              <button data-nav="marketplace" class="flex items-center justify-between px-2 py-1 rounded-lg text-slate-200 hover:bg-slate-800/70">
+                <span>${t("allCrops")}</span>
+                <i class="fa-solid fa-store text-xs text-emerald-300"></i>
+              </button>
+              ${auth && auth.role === "farmer" ? `
+              <button data-nav="farmer_dashboard" class="flex items-center justify-between px-2 py-1 rounded-lg text-slate-200 hover:bg-slate-800/70">
+                <span>${t("farmerDashboard")}</span>
+                <i class="fa-solid fa-tractor text-xs text-emerald-300"></i>
+              </button>
+              ` : ""}
+            </div>
+            <div class="border-t border-slate-700/60 pt-2 mt-1 flex items-center justify-between gap-2">
+              ${auth ? `
+                <div class="flex flex-col text-xs text-slate-300">
+                  <span class="font-medium">${auth.name}</span>
+                  <span class="text-slate-400">${auth.email}</span>
+                </div>
+                <button data-action="logout" class="btn-outline text-xs px-3 py-1">
+                  ${t("logout")}
+                </button>
+              ` : `
+                <div class="flex gap-2 w-full">
+                  <button data-nav="login_user" class="btn-outline text-xs flex-1 py-1">
+                    ${t("login")}
+                  </button>
+                  <button data-nav="signup_farmer" class="btn-primary text-xs flex-1 py-1">
+                    ${t("signup")}
+                  </button>
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+      </header>
+      `;
+    };
+
+    const renderHero = () => {
+      const crops = getCrops();
+      const users = getUsers();
+      const farmersCount = users.filter((u) => u.role === "farmer").length;
+      const villagesCount = new Set(crops.map((c) => c.village)).size || VILLAGES.length;
+      return `
+      <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 rounded-full border border-emerald-400/70 bg-emerald-900/40 px-2.5 py-1 mb-4 text-xs text-emerald-100 shadow-sm shadow-emerald-500/60">
+            <i class="fa-solid fa-circle-radiation text-emerald-300"></i>
+            <span>${t("trueVillageHint")}</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-50 mb-4 leading-tight">
+            ${t("heroTitle")}
+          </h1>
+          <p class="text-sm sm:text-base text-slate-300/90 mb-5 max-w-xl">
+            ${t("heroSubtitle")}
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <button data-nav="signup_farmer" class="btn-primary flex items-center gap-2 text-sm" data-role="farmer">
+              <i class="fa-solid fa-tractor"></i><span>${t("getStartedFarmer")}</span>
+            </button>
+            <button data-nav="marketplace" class="btn-outline flex items-center gap-2 text-sm">
+              <i class="fa-solid fa-store"></i><span>${t("getStartedBuyer")}</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 max-w-md text-xs sm:text-sm">
+            <div class="glass rounded-2xl px-3 py-2.5 flex flex-col">
+              <span class="text-emerald-300 text-xs mb-0.5 uppercase tracking-[.12em]">${t("heroStatFarmers")}</span>
+              <span class="text-xl sm:text-2xl font-semibold text-emerald-100">${farmersCount}</span>
+            </div>
+            <div class="glass rounded-2xl px-3 py-2.5 flex flex-col">
+              <span class="text-emerald-300 text-xs mb-0.5 uppercase tracking-[.12em]">${t("heroStatCrops")}</span>
+              <span class="text-xl sm:text-2xl font-semibold text-emerald-100">${crops.length}</span>
+            </div>
+            <div class="glass rounded-2xl px-3 py-2.5 flex flex-col">
+              <span class="text-emerald-300 text-xs mb-0.5 uppercase tracking-[.12em]">${t("heroStatVillages")}</span>
+              <span class="text-xl sm:text-2xl font-semibold text-emerald-100">${villagesCount}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute -top-10 -right-4 h-48 w-48 bg-emerald-500/30 blur-3xl rounded-full pointer-events-none"></div>
+          <div class="glass rounded-3xl p-4 sm:p-5 lg:p-6 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-sky-500/5 pointer-events-none"></div>
+            <div class="relative">
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-semibold text-slate-100 flex items-center gap-2">
+                  <span class="h-6 w-6 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-200">
+                    <i class="fa-solid fa-store"></i>
+                  </span>
+                  <span>${t("buyerView")}</span>
+                </h2>
+                <button data-nav="marketplace" class="text-[0.7rem] text-emerald-300 hover:text-emerald-100 flex items-center gap-1">
+                  <span>${t("browseCrops")}</span> <i class="fa-solid fa-chevron-right text-[0.65rem]"></i>
+                </button>
+              </div>
+              <div class="h-[230px] sm:h-[260px] overflow-y-auto thin-scroll space-y-3">
+                ${renderCropCardsPreview()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      `;
+    };
+
+    const renderCropCardsPreview = () => {
+      const crops = getCrops().slice(-5).reverse();
+      if (!crops.length) {
+        return `<div class="text-xs text-slate-400 italic">${t("noCrops")}</div>`;
+      }
+      const users = getUsers();
+      return crops.map((crop) => {
+        const farmer = users.find((u) => u.id === crop.farmerId);
+        return `
+        <article class="crop-card px-3.5 py-3 flex justify-between items-start">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-50 mb-0.5">${crop.name}</h3>
+            <div class="flex flex-wrap gap-1 mb-1">
+              <span class="tag-pill bg-emerald-500/20 text-emerald-200 border border-emerald-400/40">${t("qtyLabel")}: ${crop.quantity}</span>
+              <span class="tag-pill bg-sky-500/15 text-sky-200 border border-sky-400/40">${t("priceLabel")}: ₹${crop.price}</span>
+              <span class="tag-pill bg-amber-500/15 text-amber-200 border border-amber-400/45">${t("qualityLabel")}: ${crop.quality}</span>
+            </div>
+            <p class="text-[0.7rem] text-slate-300/85 line-clamp-2">${crop.description || ""}</p>
+            <div class="mt-1 flex items-center gap-2 text-[0.7rem] text-slate-400">
+              <i class="fa-solid fa-location-dot text-emerald-300"></i>
+              <span>${crop.village}</span>
+              ${farmer ? `<span class="mx-1 text-slate-600">·</span><span>${farmer.name}</span>` : ""}
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <button class="text-[0.65rem] text-emerald-300 border border-emerald-400/60 rounded-full px-2 py-0.5">
+              ${t("contactFarmer")}
+            </button>
+            <span class="text-[0.65rem] text-slate-500">${new Date(crop.createdAt).toLocaleDateString()}</span>
+          </div>
+        </article>
+        `;
+      }).join("");
+    };
+
+    const renderLoginSignup = (mode, role) => {
+      const isLogin = mode === "login";
+      const isFarmerRole = role === "farmer";
+      const title = isLogin
+        ? isFarmerRole ? t("farmerLogin") : t("userLogin")
+        : isFarmerRole ? t("farmerSignup") : t("userSignup");
+      const altText = isLogin ? t("noAccount") : t("alreadyAccount");
+      const altRoute = isLogin
+        ? isFarmerRole ? "signup_farmer" : "signup_user"
+        : isFarmerRole ? "login_farmer" : "login_user";
+
+      return `
+      <section class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <div class="glass rounded-3xl p-5 sm:p-7">
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <h1 class="text-xl sm:text-2xl font-semibold text-slate-50 mb-1">${title}</h1>
+              <p class="text-xs text-slate-400 flex items-center gap-1">
+                <i class="fa-solid fa-circle-info text-emerald-300"></i>
+                <span>${isFarmerRole ? t("farmerDashboard") : t("buyerView")}</span>
+              </p>
+            </div>
+            <div class="hidden sm:flex flex-col items-end text-[0.7rem] text-slate-400">
+              <span class="uppercase tracking-[.16em] text-emerald-300 mb-1">${t("role")}</span>
+              <span class="px-2 py-0.5 rounded-full border border-emerald-400/70 bg-emerald-900/40 text-emerald-100">
+                ${isFarmerRole ? t("roleFarmer") : t("roleUser")}
+              </span>
+            </div>
+          </div>
+
+          <form id="${isLogin ? "login-form" : "signup-form"}" class="space-y-4">
+            ${!isLogin ? `
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("name")}</label>
+              <input name="name" type="text" class="input-modern" autocomplete="name" />
+            </div>
+            ` : ""}
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("email")}</label>
+              <input name="email" type="email" class="input-modern" autocomplete="email" />
+            </div>
+            ${!isLogin ? `
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("phone")}</label>
+              <input name="phone" type="tel" class="input-modern" autocomplete="tel" />
+              <p class="text-[0.65rem] text-amber-300/80 mt-0.5 flex items-start gap-1">
+                <i class="fa-solid fa-triangle-exclamation mt-[2px]"></i>
+                <span>${t("phoneHint")}</span>
+              </p>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("village")}</label>
+              <select name="village" class="input-modern">
+                <option value="">${t("village")}</option>
+                ${VILLAGES.map((v) => `<option value="${v}">${v}</option>`).join("")}
+              </select>
+            </div>
+            ` : ""}
+
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("password")}</label>
+              <input name="password" type="password" class="input-modern" autocomplete="${isLogin ? "current-password" : "new-password"}" />
+            </div>
+
+            ${!isLogin ? `
+            <div class="space-y-1.5">
+              <label class="block text-xs text-slate-300">${t("confirmPassword")}</label>
+              <input name="confirmPassword" type="password" class="input-modern" autocomplete="new-password" />
+            </div>
+            ` : ""}
+
+            <div class="flex items-center justify-between pt-2">
+              <button type="submit" data-loading-btn class="btn-primary text-sm flex items-center gap-2">
+                ${isLogin ? `<i class="fa-solid fa-right-to-bracket"></i>` : `<i class="fa-solid fa-user-plus"></i>`}
+                <span>${isLogin ? t("login") : t("signup")}</span>
+              </button>
+              <button type="button" data-nav="${altRoute}" class="text-[0.7rem] text-slate-300 hover:text-emerald-200">
+                ${altText}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+      `;
+    };
+
+    const renderFarmerDashboard = () => {
+      const auth = AppState.auth;
+      const crops = getCrops().filter((c) => c.farmerId === auth.id);
+      return `
+      <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12 grid lg:grid-cols-[1.1fr,1.1fr] xl:grid-cols-[1.1fr,1.15fr] gap-6 lg:gap-8">
+        <div class="glass rounded-3xl p-4 sm:p-5 lg:p-6 h-fit">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-lg sm:text-xl font-semibold text-slate-50 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-tractor text-emerald-300"></i>
+                <span>${t("farmerDashboard")}</span>
+              </h2>
+              <p class="text-xs text-slate-400">${t("welcomeBack")} ${auth.name}</p>
+            </div>
+            <div class="hidden sm:flex flex-col items-end text-[0.7rem] text-slate-300">
+              <span class="px-2 py-0.5 rounded-full border border-emerald-500/60 bg-slate-950/70">${auth.village}</span>
+              <span class="mt-1">${auth.phone}</span>
+            </div>
+          </div>
+
+          <form id="add-crop-form" class="space-y-3 mt-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-300">${t("cropName")}</label>
+                <input name="name" type="text" class="input-modern" />
+              </div>
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-300">${t("quantity")}</label>
+                <input name="quantity" type="number" step="0.01" class="input-modern" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-300">${t("pricePerUnit")}</label>
+                <input name="price" type="number" step="0.01" class="input-modern" />
+              </div>
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-300">${t("quality")}</label>
+                <select name="quality" class="input-modern">
+                  <option value="">${t("quality")}</option>
+                  <option value="A+">A+</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                </select>
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs text-slate-300">${t("village")}</label>
+              <select name="village" class="input-modern">
+                ${VILLAGES.map((v) => `<option value="${v}" ${auth.village === v ? "selected" : ""}>${v}</option>`).join("")}
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="block text-xs text-slate-300">${t("description")}</label>
+              <textarea name="description" rows="3" class="input-modern resize-none"></textarea>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <button type="submit" data-loading-btn class="btn-primary text-sm flex items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i><span>${t("addCrop")}</span>
+              </button>
+              <span class="text-[0.7rem] text-slate-400 max-w-[190px] text-right hidden sm:block">
+                ${t("trueVillageHint")}
+              </span>
+            </div>
+          </form>
+        </div>
+
+        <div class="glass rounded-3xl p-4 sm:p-5 lg:p-6">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-50 flex items-center gap-2">
+              <i class="fa-solid fa-wheat-awn text-emerald-300"></i>
+              <span>${t("myCrops")}</span>
+            </h2>
+            <span class="text-[0.7rem] text-slate-400">${crops.length} ${t("allCrops").toLowerCase()}</span>
+          </div>
+          <div class="h-[280px] sm:h-[320px] overflow-y-auto thin-scroll space-y-3">
+            ${
+              crops.length
+                ? crops.slice().reverse().map((crop) => `
+              <article class="crop-card px-3.5 py-3 flex items-start justify-between">
+                <div>
+                  <h3 class="text-sm font-semibold text-slate-50 mb-0.5">${crop.name}</h3>
+                  <div class="flex flex-wrap gap-1 mb-1">
+                    <span class="tag-pill bg-emerald-500/20 text-emerald-200 border border-emerald-400/40">${t("qtyLabel")}: ${crop.quantity}</span>
+                    <span class="tag-pill bg-sky-500/15 text-sky-200 border border-sky-400/40">${t("priceLabel")}: ₹${crop.price}</span>
+                    <span class="tag-pill bg-amber-500/15 text-amber-200 border border-amber-400/45">${t("qualityLabel")}: ${crop.quality}</span>
+                  </div>
+                  <p class="text-[0.7rem] text-slate-300/85 line-clamp-2">${crop.description || ""}</p>
+                  <div class="mt-1 flex items-center gap-2 text-[0.7rem] text-slate-400">
+                    <i class="fa-solid fa-location-dot text-emerald-300"></i>
+                    <span>${crop.village}</span>
+                    <span class="mx-1 text-slate-600">·</span>
+                    <span>${new Date(crop.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <button data-delete-crop="${crop.id}" class="text-[0.65rem] text-red-300 border border-red-500/70 rounded-full px-2 py-0.5 hover:bg-red-700/40">
+                  <i class="fa-solid fa-trash-can mr-1"></i>${t("delete")}
+                </button>
+              </article>
+              `).join("")
+                : `<p class="text-xs text-slate-400 italic">${t("farmerCropsEmpty")}</p>`
+            }
+          </div>
+        </div>
+      </section>
+      `;
+    };
+
+    const renderMarketplace = () => {
+      const crops = getCrops();
+      const users = getUsers();
+
+      const filtered = crops.filter((crop) => {
+        const { search, village, quality } = AppState.filters;
+        let ok = true;
+        if (search) {
+          const s = search.toLowerCase();
+          const farmer = users.find((u) => u.id === crop.farmerId);
+          ok =
+            crop.name.toLowerCase().includes(s) ||
+            crop.village.toLowerCase().includes(s) ||
+            (farmer && farmer.name.toLowerCase().includes(s));
+        }
+        if (ok && village !== "all") ok = crop.village === village;
+        if (ok && quality !== "all") ok = crop.quality === quality;
+        return ok;
+      });
+
+      return `
+      <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+        <div class="flex flex-col sm:flex-row gap-4 sm:items-end sm:justify-between mb-5">
+          <div>
+            <h1 class="text-xl sm:text-2xl font-semibold text-slate-50 flex items-center gap-2 mb-1">
+              <i class="fa-solid fa-store text-emerald-300"></i>
+              <span>${t("allCrops")}</span>
+            </h1>
+            <p class="text-xs text-slate-400 max-w-md">${t("trueVillageHint")}</p>
+          </div>
+          <div class="glass rounded-2xl px-3 py-2 flex flex-wrap gap-2 items-center">
+            <div class="flex items-center gap-2 flex-1 min-w-[160px]">
+              <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+              <input id="filter-search" type="text" class="bg-transparent text-xs outline-none w-full text-slate-100 placeholder:text-slate-500" placeholder="${t("searchPlaceholder")}" value="${AppState.filters.search}" />
+            </div>
+            <div class="flex items-center gap-2 text-[0.7rem]">
+              <select id="filter-village" class="bg-slate-900/80 border border-slate-600/70 text-slate-100 rounded-full px-2 py-1 text-[0.7rem] outline-none">
+                <option value="all">${t("filterVillage")}: ${t("all")}</option>
+                ${VILLAGES.map((v) => `<option value="${v}" ${AppState.filters.village === v ? "selected" : ""}>${v}</option>`).join("")}
+              </select>
+              <select id="filter-quality" class="bg-slate-900/80 border border-slate-600/70 text-slate-100 rounded-full px-2 py-1 text-[0.7rem] outline-none">
+                <option value="all">${t("filterQuality")}: ${t("all")}</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          ${
+            filtered.length
+              ? filtered.slice().reverse().map((crop) => {
+                const farmer = users.find((u) => u.id === crop.farmerId);
+                return `
+              <article class="crop-card p-3.5 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-start justify-between gap-2 mb-1.5">
+                    <div>
+                      <h2 class="text-sm font-semibold text-slate-50 mb-0.5">${crop.name}</h2>
+                      <p class="text-[0.7rem] text-slate-400 line-clamp-2">${crop.description || ""}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-emerald-200 font-semibold">₹${crop.price}</p>
+                      <p class="text-[0.65rem] text-slate-400">${t("qtyLabel")}: ${crop.quantity}</p>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-1 mb-1.5">
+                    <span class="tag-pill bg-amber-500/15 text-amber-200 border border-amber-400/45">${t("qualityLabel")}: ${crop.quality}</span>
+                    <span class="tag-pill bg-emerald-500/20 text-emerald-200 border border-emerald-400/40 flex items-center gap-1">
+                      <i class="fa-solid fa-location-dot text-emerald-300"></i>${crop.village}
+                    </span>
+                  </div>
+                </div>
+                <div class="mt-2 pt-2 border-t border-slate-700/70 flex items-center justify-between gap-3">
+                  ${
+                    farmer
+                      ? `
+                  <div class="flex flex-col text-[0.7rem] text-slate-300">
+                    <span class="font-medium flex items-center gap-1">
+                      <i class="fa-solid fa-user text-emerald-300"></i>
+                      <span>${t("farmerName")}: ${farmer.name}</span>
+                    </span>
+                    <span class="flex items-center gap-1 text-slate-400">
+                      <i class="fa-solid fa-phone text-emerald-300"></i>
+                      <span>${t("farmerPhone")}: ${farmer.phone}</span>
+                    </span>
+                    <span class="flex items-center gap-1 text-slate-500">
+                      <i class="fa-solid fa-location-dot text-emerald-300"></i>
+                      <span>${t("farmerVillage")}: ${farmer.village}</span>
+                    </span>
+                  </div>
+                  `
+                      : ""
+                  }
+                  <a href="tel:${farmer ? farmer.phone : ""}" class="btn-outline text-[0.7rem] whitespace-nowrap flex items-center gap-1 px-3 py-1">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    <span>${t("contactFarmer")}</span>
+                  </a>
+                </div>
+              </article>
+              `;
+              }).join("")
+              : `<p class="text-sm text-slate-400 col-span-full">${t("noCrops")}</p>`
+          }
+        </div>
+      </section>
+      `;
+    };
+
+    const renderHome = () => `
+      ${renderHero()}
+    `;
+
+    const renderMainContent = () => {
+      switch (AppState.currentRoute) {
+        case "login_farmer":
+          return renderLoginSignup("login", "farmer");
+        case "login_user":
+          return renderLoginSignup("login", "user");
+        case "signup_farmer":
+          return renderLoginSignup("signup", "farmer");
+        case "signup_user":
+          return renderLoginSignup("signup", "user");
+        case "farmer_dashboard":
+          if (!AppState.auth || AppState.auth.role !== "farmer") {
+            setRoute("login_farmer");
+            return "";
+          }
+          return renderFarmerDashboard();
+        case "marketplace":
+          return renderMarketplace();
+        case "home":
+        default:
+          return renderHome();
+      }
+    };
+
+    const renderApp = () => {
+      const root = document.getElementById("app-root");
+      if (!root) return;
+      root.innerHTML = `
+        ${renderNavbar()}
+        <main class="flex-1">
+          ${renderMainContent()}
+        </main>
+        <footer class="mt-auto border-t border-slate-800/80 bg-slate-950/90">
+          <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between text-[0.7rem] text-slate-500">
+            <div class="flex items-center gap-1">
+              <i class="fa-solid fa-leaf text-emerald-400"></i>
+              <span>&copy; ${new Date().getFullYear()} ${t("brand")}. ${t("tagline")}.</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="px-2 py-0.5 rounded-full border border-emerald-500/40 text-emerald-200 bg-slate-900/80">${VILLAGES.length} ${t("villageLabel") || "Villages"} ✓</span>
+              <span class="px-2 py-0.5 rounded-full border border-slate-600/40 text-slate-300 bg-slate-900/80 flex items-center gap-1">
+                <i class="fa-solid fa-signal text-emerald-300"></i>
+                <span>100% Frontend · LocalStorage</span>
+              </span>
+            </div>
+          </div>
+        </footer>
+      `;
+      attachEventListeners();
+    };
+
+    // -----------------------
+    // Event Listeners
+    // -----------------------
+    const attachEventListeners = () => {
+      // Nav buttons
+      document.querySelectorAll("[data-nav]").forEach((el) => {
+        el.onclick = () => {
+          const dest = el.getAttribute("data-nav");
+          setRoute(dest);
+          const mobileNav = document.getElementById("mobile-nav");
+          if (mobileNav) mobileNav.classList.add("hidden");
+        };
+      });
+
+      const logoutBtn = document.querySelector("[data-action='logout']");
+      if (logoutBtn) logoutBtn.onclick = logout;
+
+      // Language
+      const langSelect = document.getElementById("language-select");
+      if (langSelect) {
+        langSelect.onchange = (e) => setLanguage(e.target.value);
+      }
+      const langSelectMobile = document.getElementById("language-select-mobile");
+      if (langSelectMobile) {
+        langSelectMobile.onchange = (e) => setLanguage(e.target.value);
+      }
+
+      // Mobile menu
+      const mobileToggle = document.getElementById("mobile-menu-toggle");
+      const mobileNav = document.getElementById("mobile-nav");
+      if (mobileToggle && mobileNav) {
+        mobileToggle.onclick = () => {
+          mobileNav.classList.toggle("hidden");
+        };
+      }
+
+      // Auth forms
+      const loginForm = document.getElementById("login-form");
+      if (loginForm) {
+        loginForm.onsubmit = (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const email = form.email.value.trim();
+          const password = form.password.value;
+          const role = AppState.currentRoute === "login_farmer" ? "farmer" : "user";
+          setLoading(true);
+          setTimeout(() => {
+            login({ role, email, password });
+            setLoading(false);
+          }, 300);
+        };
+      }
+      const signupForm = document.getElementById("signup-form");
+      if (signupForm) {
+        signupForm.onsubmit = (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const role = AppState.currentRoute === "signup_farmer" ? "farmer" : "user";
+          const data = {
+            role,
+            name: form.name.value.trim(),
+            email: form.email.value.trim(),
+            phone: form.phone.value.trim(),
+            village: form.village.value,
+            password: form.password.value,
+            confirmPassword: form.confirmPassword.value,
+          };
+          setLoading(true);
+          setTimeout(() => {
+            signup(data);
+            setLoading(false);
+          }, 350);
+        };
+      }
+
+      // Add crop form
+      const addCropForm = document.getElementById("add-crop-form");
+      if (addCropForm) {
+        addCropForm.onsubmit = (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const ok = addCrop({
+            name: form.name.value.trim(),
+            quantity: form.quantity.value,
+            price: form.price.value,
+            quality: form.quality.value,
+            description: form.description.value.trim(),
+            village: form.village.value,
+          });
+          if (ok) form.reset();
+        };
+      }
+
+      // Delete crop buttons
+      document.querySelectorAll("[data-delete-crop]").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.getAttribute("data-delete-crop");
+          deleteCrop(id);
+        };
+      });
+
+      // Filters on marketplace
+      const searchInput = document.getElementById("filter-search");
+      if (searchInput) {
+        searchInput.oninput = (e) => {
+          AppState.filters.search = e.target.value;
+          renderApp();
+        };
+      }
+      const villageSelect = document.getElementById("filter-village");
+      if (villageSelect) {
+        villageSelect.onchange = (e) => {
+          AppState.filters.village = e.target.value;
+          renderApp();
+        };
+      }
+      const qualitySelect = document.getElementById("filter-quality");
+      if (qualitySelect) {
+        qualitySelect.onchange = (e) => {
+          AppState.filters.quality = e.target.value;
+          renderApp();
+        };
+      }
+    };
+
+    // -----------------------
+    // Initialize App
+    // -----------------------
+    const bootstrap = () => {
+      if (AppState.initDone) return;
+      AppState.initDone = true;
+      const existingSession = getSession();
+      if (existingSession) {
+        AppState.auth = existingSession;
+        showToast(t("sessionRestored"), "info");
+      }
+      renderApp();
+    };
+
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  </script>
 </body>
 </html>
